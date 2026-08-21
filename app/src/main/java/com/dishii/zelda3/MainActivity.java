@@ -33,21 +33,21 @@ public class MainActivity extends SDLActivity {
         public VirtualGamepadView(Context context) {
             super(context);
             
-            int colorYellow = 0xFFF0D030; // Golden yellow
+            int colorWhite = 0xAAFFFFFF; // Semi-transparent white
             
             strokePaint = new Paint();
-            strokePaint.setColor(colorYellow);
+            strokePaint.setColor(colorWhite);
             strokePaint.setStyle(Paint.Style.STROKE);
             strokePaint.setStrokeWidth(6f);
             strokePaint.setAntiAlias(true);
             
             fillPaint = new Paint();
-            fillPaint.setColor(0x66F0D030); // Semi-transparent yellow
-            fillPaint.setStyle(Paint.Style.FILL);
+            fillPaint.setColor(colorWhite);
+            fillPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             fillPaint.setAntiAlias(true);
             
             textPaint = new Paint();
-            textPaint.setColor(colorYellow);
+            textPaint.setColor(colorWhite);
             textPaint.setTextSize(40f);
             textPaint.setTextAlign(Paint.Align.CENTER);
             textPaint.setFakeBoldText(true);
@@ -70,7 +70,11 @@ public class MainActivity extends SDLActivity {
         
         ButtonDef[] buttons = null;
         ButtonDef dpadUp, dpadDown, dpadLeft, dpadRight;
-        float dpadX, dpadY, dpadR;
+        float defaultDpadX, defaultDpadY, dpadR;
+        float currentDpadX, currentDpadY;
+        float analogFingerX = 0, analogFingerY = 0;
+        boolean analogPressed = false;
+        int analogPointerId = -1;
         
         ButtonDef toggleButton;
         boolean controlsVisible = true;
@@ -85,29 +89,31 @@ public class MainActivity extends SDLActivity {
             textPaint.setTextSize(bw * 0.7f); // Scale text to fit button
             strokePaint.setStrokeWidth(bw * 0.08f);
 
-            dpadR = bw * 2.5f;
-            dpadX = dpadR + bw * 0.5f;
-            dpadY = h - dpadR - bw * 0.5f;
+            dpadR = bw * 1.6f; // Reduced size
+            defaultDpadX = bw * 3.0f;
+            defaultDpadY = h - bw * 3.0f;
+            currentDpadX = defaultDpadX;
+            currentDpadY = defaultDpadY;
             float spacing = bw * 1.5f;
 
-            dpadUp = new ButtonDef("^", dpadX, dpadY - spacing, bw, KeyEvent.KEYCODE_DPAD_UP);
-            dpadDown = new ButtonDef("v", dpadX, dpadY + spacing, bw, KeyEvent.KEYCODE_DPAD_DOWN);
-            dpadLeft = new ButtonDef("<", dpadX - spacing, dpadY, bw, KeyEvent.KEYCODE_DPAD_LEFT);
-            dpadRight = new ButtonDef(">", dpadX + spacing, dpadY, bw, KeyEvent.KEYCODE_DPAD_RIGHT);
+            dpadUp = new ButtonDef("^", defaultDpadX, defaultDpadY - spacing, bw, KeyEvent.KEYCODE_DPAD_UP);
+            dpadDown = new ButtonDef("v", defaultDpadX, defaultDpadY + spacing, bw, KeyEvent.KEYCODE_DPAD_DOWN);
+            dpadLeft = new ButtonDef("<", defaultDpadX - spacing, defaultDpadY, bw, KeyEvent.KEYCODE_DPAD_LEFT);
+            dpadRight = new ButtonDef(">", defaultDpadX + spacing, defaultDpadY, bw, KeyEvent.KEYCODE_DPAD_RIGHT);
 
             buttons = new ButtonDef[] {
                 new ButtonDef("A", w - bw * 2.0f, h - bw * 3.5f, bw, KeyEvent.KEYCODE_X),
-                new ButtonDef("B", w - bw * 4.0f, h - bw * 2.0f, bw, KeyEvent.KEYCODE_Z),
-                new ButtonDef("X", w - bw * 4.0f, h - bw * 5.0f, bw, KeyEvent.KEYCODE_S),
+                new ButtonDef("B", w - bw * 4.0f, h - bw * 1.5f, bw, KeyEvent.KEYCODE_Z),
+                new ButtonDef("X", w - bw * 4.0f, h - bw * 5.5f, bw, KeyEvent.KEYCODE_S),
                 new ButtonDef("Y", w - bw * 6.0f, h - bw * 3.5f, bw, KeyEvent.KEYCODE_A),
-                new ButtonDef("START", w / 2f + bw*2.2f, h - bw*0.5f, bw*1.8f, bw*0.7f, 1, KeyEvent.KEYCODE_ENTER),
-                new ButtonDef("SELECT", w / 2f - bw*2.2f, h - bw*0.5f, bw*1.8f, bw*0.7f, 1, KeyEvent.KEYCODE_SHIFT_RIGHT),
+                new ButtonDef("START", w / 2f + bw*2.2f, h - bw*1.5f, bw*1.4f, bw*0.55f, 1, KeyEvent.KEYCODE_ENTER),
+                new ButtonDef("SELECT", w / 2f - bw*2.2f, h - bw*1.5f, bw*1.4f, bw*0.55f, 1, KeyEvent.KEYCODE_SHIFT_RIGHT),
                 new ButtonDef("L", bw * 3f, bw * 1.2f, bw*2f, bw*0.7f, 1, KeyEvent.KEYCODE_C),
                 new ButtonDef("R", w - bw * 3f, bw * 1.2f, bw*2f, bw*0.7f, 1, KeyEvent.KEYCODE_V),
                 dpadUp, dpadDown, dpadLeft, dpadRight
             };
             
-            toggleButton = new ButtonDef("👁", w / 2f, bw * 1.2f, bw * 0.5f, 0);
+            toggleButton = new ButtonDef("H", w / 2f, bw * 1.2f, bw * 0.5f, 0);
         }
 
         @Override
@@ -126,106 +132,47 @@ public class MainActivity extends SDLActivity {
             
             if (!controlsVisible) return;
             
-            // Draw D-Pad cross
-            android.graphics.Path cross = new android.graphics.Path();
-            float bw = dpadUp.rx;
-            float halfW = bw * 0.85f;
-            float armL = dpadR;
-            float r = halfW * 0.3f; // corner radius
+            // Draw Analog Stick (replacing D-Pad)
+            canvas.drawCircle(currentDpadX, currentDpadY, dpadR, strokePaint);
             
-            // Start at top-left of the UP arm
-            cross.moveTo(dpadX - halfW, dpadY - armL + r);
-            cross.quadTo(dpadX - halfW, dpadY - armL, dpadX - halfW + r, dpadY - armL);
-            cross.lineTo(dpadX + halfW - r, dpadY - armL);
-            cross.quadTo(dpadX + halfW, dpadY - armL, dpadX + halfW, dpadY - armL + r);
-            cross.lineTo(dpadX + halfW, dpadY - halfW);
-            // Right arm
-            cross.lineTo(dpadX + armL - r, dpadY - halfW);
-            cross.quadTo(dpadX + armL, dpadY - halfW, dpadX + armL, dpadY - halfW + r);
-            cross.lineTo(dpadX + armL, dpadY + halfW - r);
-            cross.quadTo(dpadX + armL, dpadY + halfW, dpadX + armL - r, dpadY + halfW);
-            cross.lineTo(dpadX + halfW, dpadY + halfW);
-            // Down arm
-            cross.lineTo(dpadX + halfW, dpadY + armL - r);
-            cross.quadTo(dpadX + halfW, dpadY + armL, dpadX + halfW - r, dpadY + armL);
-            cross.lineTo(dpadX - halfW + r, dpadY + armL);
-            cross.quadTo(dpadX - halfW, dpadY + armL, dpadX - halfW, dpadY + armL - r);
-            cross.lineTo(dpadX - halfW, dpadY + halfW);
-            // Left arm
-            cross.lineTo(dpadX - armL + r, dpadY + halfW);
-            cross.quadTo(dpadX - armL, dpadY + halfW, dpadX - armL, dpadY + halfW - r);
-            cross.lineTo(dpadX - armL, dpadY - halfW + r);
-            cross.quadTo(dpadX - armL, dpadY - halfW, dpadX - armL + r, dpadY - halfW);
-            cross.lineTo(dpadX - halfW, dpadY - halfW);
-            cross.close();
+            float analogX = currentDpadX + analogFingerX;
+            float analogY = currentDpadY + analogFingerY;
+            float distSq = analogFingerX * analogFingerX + analogFingerY * analogFingerY;
+            float maxDist = dpadR * 0.5f; // knob can move up to half radius
+            if (distSq > maxDist * maxDist) {
+                float dist = (float) Math.sqrt(distSq);
+                float scale = maxDist / dist;
+                analogX = currentDpadX + analogFingerX * scale;
+                analogY = currentDpadY + analogFingerY * scale;
+            }
             
-            canvas.drawPath(cross, strokePaint);
-            
-            // Draw pressed state for D-Pad arms
-            if (dpadUp.pressed) canvas.drawRoundRect(new android.graphics.RectF(dpadX - halfW, dpadY - armL, dpadX + halfW, dpadY), r, r, fillPaint);
-            if (dpadDown.pressed) canvas.drawRoundRect(new android.graphics.RectF(dpadX - halfW, dpadY, dpadX + halfW, dpadY + armL), r, r, fillPaint);
-            if (dpadLeft.pressed) canvas.drawRoundRect(new android.graphics.RectF(dpadX - armL, dpadY - halfW, dpadX, dpadY + halfW), r, r, fillPaint);
-            if (dpadRight.pressed) canvas.drawRoundRect(new android.graphics.RectF(dpadX, dpadY - halfW, dpadX + armL, dpadY + halfW), r, r, fillPaint);
-            
-            Paint solidPaint = new Paint();
-            solidPaint.setColor(strokePaint.getColor());
-            solidPaint.setStyle(Paint.Style.FILL);
-            solidPaint.setAntiAlias(true);
-            
-            // Draw center circle
-            canvas.drawCircle(dpadX, dpadY, halfW * 0.45f, solidPaint);
-            
-            // Draw arrows
-            float arrowOffset = armL * 0.7f;
-            float arrowSize = halfW * 0.4f;
-            
-            android.graphics.Path upArrow = new android.graphics.Path();
-            upArrow.moveTo(dpadX, dpadY - arrowOffset - arrowSize);
-            upArrow.lineTo(dpadX - arrowSize, dpadY - arrowOffset + arrowSize);
-            upArrow.lineTo(dpadX + arrowSize, dpadY - arrowOffset + arrowSize);
-            upArrow.close();
-            canvas.drawPath(upArrow, solidPaint);
-            
-            android.graphics.Path downArrow = new android.graphics.Path();
-            downArrow.moveTo(dpadX, dpadY + arrowOffset + arrowSize);
-            downArrow.lineTo(dpadX - arrowSize, dpadY + arrowOffset - arrowSize);
-            downArrow.lineTo(dpadX + arrowSize, dpadY + arrowOffset - arrowSize);
-            downArrow.close();
-            canvas.drawPath(downArrow, solidPaint);
-            
-            android.graphics.Path leftArrow = new android.graphics.Path();
-            leftArrow.moveTo(dpadX - arrowOffset - arrowSize, dpadY);
-            leftArrow.lineTo(dpadX - arrowOffset + arrowSize, dpadY - arrowSize);
-            leftArrow.lineTo(dpadX - arrowOffset + arrowSize, dpadY + arrowSize);
-            leftArrow.close();
-            canvas.drawPath(leftArrow, solidPaint);
-            
-            android.graphics.Path rightArrow = new android.graphics.Path();
-            rightArrow.moveTo(dpadX + arrowOffset + arrowSize, dpadY);
-            rightArrow.lineTo(dpadX + arrowOffset - arrowSize, dpadY - arrowSize);
-            rightArrow.lineTo(dpadX + arrowOffset - arrowSize, dpadY + arrowSize);
-            rightArrow.close();
-            canvas.drawPath(rightArrow, solidPaint);
+            Paint knobPaint = new Paint(fillPaint);
+            knobPaint.setStyle(Paint.Style.FILL);
+            knobPaint.setColor(0xAAFFFFFF);
+            canvas.drawCircle(analogX, analogY, dpadR * 0.5f, knobPaint);
             
             for (ButtonDef b : buttons) {
                 if (b == dpadUp || b == dpadDown || b == dpadLeft || b == dpadRight) continue;
                 
+                Paint currentPaint = b.pressed ? fillPaint : strokePaint;
+                int currentTextColor = b.pressed ? 0xFF000000 : 0xAAFFFFFF;
+                textPaint.setColor(currentTextColor);
+                
                 if (b.type == 0) {
-                    if (b.pressed) canvas.drawCircle(b.x, b.y, b.rx, fillPaint);
-                    canvas.drawCircle(b.x, b.y, b.rx, strokePaint);
+                    canvas.drawCircle(b.x, b.y, b.rx, currentPaint);
                 } else if (b.type == 1) {
                     android.graphics.RectF rect = new android.graphics.RectF(b.x - b.rx, b.y - b.ry, b.x + b.rx, b.y + b.ry);
-                    if (b.pressed) canvas.drawRoundRect(rect, b.ry, b.ry, fillPaint);
-                    canvas.drawRoundRect(rect, b.ry, b.ry, strokePaint);
+                    canvas.drawRoundRect(rect, b.ry, b.ry, currentPaint);
                 }
                 
-                float textY = b.y - ((textPaint.descent() + textPaint.ascent()) / 2);
                 if (b.type == 1) {
                     float oldSize = textPaint.getTextSize();
                     textPaint.setTextSize(oldSize * 0.6f);
-                    canvas.drawText(b.label, b.x, b.y - ((textPaint.descent() + textPaint.ascent()) / 2), textPaint);
+                    float textY = b.y - ((textPaint.descent() + textPaint.ascent()) / 2);
+                    canvas.drawText(b.label, b.x, textY, textPaint);
                     textPaint.setTextSize(oldSize);
                 } else {
+                    float textY = b.y - ((textPaint.descent() + textPaint.ascent()) / 2);
                     canvas.drawText(b.label, b.x, textY, textPaint);
                 }
             }
@@ -238,12 +185,44 @@ public class MainActivity extends SDLActivity {
             boolean[] nextState = new boolean[buttons.length];
             boolean toggleNextState = false;
             
+            boolean analogActive = false;
+            float currentFingerX = 0;
+            float currentFingerY = 0;
+            
             int pointerCount = event.getPointerCount();
+            int action = event.getActionMasked();
+            int actionIndex = event.getActionIndex();
+            int actionId = event.getPointerId(actionIndex);
+
+            // Handle touch down for floating analog
+            if (controlsVisible && (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN)) {
+                float tx = event.getX(actionIndex);
+                float ty = event.getY(actionIndex);
+                // Left half of screen, below the L button
+                if (tx < getWidth() / 2f && ty > getHeight() * 0.35f) {
+                    if (analogPointerId == -1) {
+                        analogPointerId = actionId;
+                        currentDpadX = tx;
+                        currentDpadY = ty;
+                        invalidate();
+                    }
+                }
+            }
+
+            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) {
+                if (actionId == analogPointerId) {
+                    analogPointerId = -1;
+                    currentDpadX = defaultDpadX;
+                    currentDpadY = defaultDpadY;
+                    invalidate();
+                }
+            }
+
             for (int i = 0; i < pointerCount; i++) {
-                if (event.getActionMasked() == MotionEvent.ACTION_POINTER_UP ||
-                    event.getActionMasked() == MotionEvent.ACTION_UP ||
-                    event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                    if (event.getActionIndex() == i) continue;
+                if (action == MotionEvent.ACTION_POINTER_UP ||
+                    action == MotionEvent.ACTION_UP ||
+                    action == MotionEvent.ACTION_CANCEL) {
+                    if (actionIndex == i) continue;
                 }
                 
                 float x = event.getX(i);
@@ -257,14 +236,18 @@ public class MainActivity extends SDLActivity {
                 }
                 
                 if (controlsVisible) {
-                    // Check D-Pad
-                    float dx = x - dpadX;
-                    float dy = y - dpadY;
-                    if (dx*dx + dy*dy <= dpadR*dpadR) {
-                        if (dy < -dpadR*0.2f) nextState[8] = true; // UP
-                        if (dy > dpadR*0.2f) nextState[9] = true; // DOWN
-                        if (dx < -dpadR*0.2f) nextState[10] = true; // LEFT
-                        if (dx > dpadR*0.2f) nextState[11] = true; // RIGHT
+                    // Check Analog Stick
+                    int id = event.getPointerId(i);
+                    if (id == analogPointerId) {
+                        float dx = x - currentDpadX;
+                        float dy = y - currentDpadY;
+                        analogActive = true;
+                        currentFingerX = dx;
+                        currentFingerY = dy;
+                        if (dy < -dpadR*0.3f) nextState[8] = true; // UP
+                        if (dy > dpadR*0.3f) nextState[9] = true; // DOWN
+                        if (dx < -dpadR*0.3f) nextState[10] = true; // LEFT
+                        if (dx > dpadR*0.3f) nextState[11] = true; // RIGHT
                     }
                     
                     // Check other buttons
@@ -286,6 +269,18 @@ public class MainActivity extends SDLActivity {
             }
             
             boolean changed = false;
+            
+            if (analogActive) {
+                if (analogFingerX != currentFingerX || analogFingerY != currentFingerY || !analogPressed) changed = true;
+                analogFingerX = currentFingerX;
+                analogFingerY = currentFingerY;
+                analogPressed = true;
+            } else {
+                if (analogPressed) changed = true;
+                analogFingerX = 0;
+                analogFingerY = 0;
+                analogPressed = false;
+            }
             
             if (toggleButton.pressed != toggleNextState) {
                 toggleButton.pressed = toggleNextState;
