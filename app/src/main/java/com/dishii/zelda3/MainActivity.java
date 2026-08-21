@@ -370,7 +370,6 @@ public class MainActivity extends SDLActivity {
 
                 try {
                     AssetCopyUtil.copyAssetsToExternal(this, "saves/ref", getExternalFilesDir(null).getAbsolutePath() + "/saves/ref");
-                    datNotice.createNewFile();
                     if (configFile.createNewFile()) {
                         InputStream inputStream;
                         try {
@@ -382,6 +381,23 @@ public class MainActivity extends SDLActivity {
                         // Write configuration data to configFile
                         writeDataToFile(configFile,inputStream);
                     }
+
+                    // Copia zelda3_assets.dat dos assets para /sdcard/zelda/ se ainda não existir
+                    File assetsFile = new File(externalDir, "zelda3_assets.dat");
+                    if (!assetsFile.exists()) {
+                        Log.i("Zelda3", "Copiando zelda3_assets.dat para " + assetsFile.getAbsolutePath());
+                        try {
+                            InputStream assetIn = getAssets().open("zelda3_assets.dat");
+                            writeDataToFile(assetsFile, assetIn);
+                            Log.i("Zelda3", "zelda3_assets.dat copiado com sucesso.");
+                        } catch (IOException e) {
+                            Log.e("Zelda3", "Erro ao copiar zelda3_assets.dat: " + e.getMessage());
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Log.i("Zelda3", "zelda3_assets.dat ja existe em " + assetsFile.getAbsolutePath() + ", pulando copia.");
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
