@@ -26,92 +26,217 @@ import android.view.View;
 public class MainActivity extends SDLActivity {
 
     private class VirtualGamepadView extends View {
-        private Paint paint;
+        private Paint strokePaint;
+        private Paint fillPaint;
         private Paint textPaint;
 
         public VirtualGamepadView(Context context) {
             super(context);
-            paint = new Paint();
-            paint.setColor(0x88FFFFFF); // Semi-transparent white
-            paint.setStyle(Paint.Style.FILL);
+            
+            int colorYellow = 0xFFF0D030; // Golden yellow
+            
+            strokePaint = new Paint();
+            strokePaint.setColor(colorYellow);
+            strokePaint.setStyle(Paint.Style.STROKE);
+            strokePaint.setStrokeWidth(6f);
+            strokePaint.setAntiAlias(true);
+            
+            fillPaint = new Paint();
+            fillPaint.setColor(0x66F0D030); // Semi-transparent yellow
+            fillPaint.setStyle(Paint.Style.FILL);
+            fillPaint.setAntiAlias(true);
+            
             textPaint = new Paint();
-            textPaint.setColor(0xFF000000);
+            textPaint.setColor(colorYellow);
             textPaint.setTextSize(40f);
             textPaint.setTextAlign(Paint.Align.CENTER);
             textPaint.setFakeBoldText(true);
+            textPaint.setAntiAlias(true);
         }
 
         class ButtonDef {
             String label;
-            float x, y, r;
+            float x, y, rx, ry; 
+            int type; // 0 = circle, 1 = rounded rect
             int keycode;
             boolean pressed = false;
             ButtonDef(String label, float x, float y, float r, int keycode) {
-                this.label = label; this.x = x; this.y = y; this.r = r; this.keycode = keycode;
+                this.label = label; this.x = x; this.y = y; this.rx = r; this.ry = r; this.type = 0; this.keycode = keycode;
+            }
+            ButtonDef(String label, float x, float y, float rx, float ry, int type, int keycode) {
+                this.label = label; this.x = x; this.y = y; this.rx = rx; this.ry = ry; this.type = type; this.keycode = keycode;
             }
         }
         
         ButtonDef[] buttons = null;
-        ButtonDef dpadUp = new ButtonDef("U", 0,0,0, KeyEvent.KEYCODE_DPAD_UP);
-        ButtonDef dpadDown = new ButtonDef("D", 0,0,0, KeyEvent.KEYCODE_DPAD_DOWN);
-        ButtonDef dpadLeft = new ButtonDef("L", 0,0,0, KeyEvent.KEYCODE_DPAD_LEFT);
-        ButtonDef dpadRight = new ButtonDef("R", 0,0,0, KeyEvent.KEYCODE_DPAD_RIGHT);
-        
+        ButtonDef dpadUp, dpadDown, dpadLeft, dpadRight;
         float dpadX, dpadY, dpadR;
+        
+        ButtonDef toggleButton;
+        boolean controlsVisible = true;
 
         @Override
         protected void onSizeChanged(int w, int h, int oldw, int oldh) {
             super.onSizeChanged(w, h, oldw, oldh);
             float minDim = Math.min(w, h);
-            float bw = minDim / 12f; // Button radius based on height
-            if (bw > 90) bw = 90; // Cap the radius so they don't get huge
+            float bw = minDim / 14f; // Button radius based on height
+            if (bw > 90) bw = 90;
 
             textPaint.setTextSize(bw * 0.7f); // Scale text to fit button
+            strokePaint.setStrokeWidth(bw * 0.08f);
 
-            dpadR = bw * 1.8f;
-            dpadX = dpadR + bw;
-            dpadY = h - dpadR - bw;
+            dpadR = bw * 2.5f;
+            dpadX = dpadR + bw * 0.5f;
+            dpadY = h - dpadR - bw * 0.5f;
+            float spacing = bw * 1.5f;
+
+            dpadUp = new ButtonDef("^", dpadX, dpadY - spacing, bw, KeyEvent.KEYCODE_DPAD_UP);
+            dpadDown = new ButtonDef("v", dpadX, dpadY + spacing, bw, KeyEvent.KEYCODE_DPAD_DOWN);
+            dpadLeft = new ButtonDef("<", dpadX - spacing, dpadY, bw, KeyEvent.KEYCODE_DPAD_LEFT);
+            dpadRight = new ButtonDef(">", dpadX + spacing, dpadY, bw, KeyEvent.KEYCODE_DPAD_RIGHT);
 
             buttons = new ButtonDef[] {
-                new ButtonDef("A", w - bw * 1.5f, h - bw * 2.8f, bw, KeyEvent.KEYCODE_X),
-                new ButtonDef("B", w - bw * 3.2f, h - bw * 1.5f, bw, KeyEvent.KEYCODE_Z),
-                new ButtonDef("X", w - bw * 3.2f, h - bw * 4.1f, bw, KeyEvent.KEYCODE_S),
-                new ButtonDef("Y", w - bw * 4.9f, h - bw * 2.8f, bw, KeyEvent.KEYCODE_A),
-                new ButtonDef("Start", w / 2f + bw*1.4f, h - bw*0.8f, bw*0.7f, KeyEvent.KEYCODE_ENTER),
-                new ButtonDef("Select", w / 2f - bw*1.4f, h - bw*0.8f, bw*0.7f, KeyEvent.KEYCODE_SHIFT_RIGHT),
-                new ButtonDef("L", bw * 2f, bw * 1.5f, bw, KeyEvent.KEYCODE_C),
-                new ButtonDef("R", w - bw * 2f, bw * 1.5f, bw, KeyEvent.KEYCODE_V),
+                new ButtonDef("A", w - bw * 2.0f, h - bw * 3.5f, bw, KeyEvent.KEYCODE_X),
+                new ButtonDef("B", w - bw * 4.0f, h - bw * 2.0f, bw, KeyEvent.KEYCODE_Z),
+                new ButtonDef("X", w - bw * 4.0f, h - bw * 5.0f, bw, KeyEvent.KEYCODE_S),
+                new ButtonDef("Y", w - bw * 6.0f, h - bw * 3.5f, bw, KeyEvent.KEYCODE_A),
+                new ButtonDef("START", w / 2f + bw*2.2f, h - bw*0.5f, bw*1.8f, bw*0.7f, 1, KeyEvent.KEYCODE_ENTER),
+                new ButtonDef("SELECT", w / 2f - bw*2.2f, h - bw*0.5f, bw*1.8f, bw*0.7f, 1, KeyEvent.KEYCODE_SHIFT_RIGHT),
+                new ButtonDef("L", bw * 3f, bw * 1.2f, bw*2f, bw*0.7f, 1, KeyEvent.KEYCODE_C),
+                new ButtonDef("R", w - bw * 3f, bw * 1.2f, bw*2f, bw*0.7f, 1, KeyEvent.KEYCODE_V),
                 dpadUp, dpadDown, dpadLeft, dpadRight
             };
+            
+            toggleButton = new ButtonDef("👁", w / 2f, bw * 1.2f, bw * 0.5f, 0);
         }
 
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            if (buttons == null) return;
+            if (buttons == null || toggleButton == null) return;
             
-            // Draw D-Pad background
-            paint.setColor(0x66FFFFFF);
-            canvas.drawCircle(dpadX, dpadY, dpadR, paint);
+            // Draw toggle button
+            if (toggleButton.pressed) canvas.drawCircle(toggleButton.x, toggleButton.y, toggleButton.rx, fillPaint);
+            canvas.drawCircle(toggleButton.x, toggleButton.y, toggleButton.rx, strokePaint);
+            float oldSizeToggle = textPaint.getTextSize();
+            textPaint.setTextSize(oldSizeToggle * 0.6f);
+            float toggleTextY = toggleButton.y - ((textPaint.descent() + textPaint.ascent()) / 2);
+            canvas.drawText(toggleButton.label, toggleButton.x, toggleTextY, textPaint);
+            textPaint.setTextSize(oldSizeToggle);
             
-            // Draw center dot for D-pad
-            paint.setColor(0x88000000);
-            canvas.drawCircle(dpadX, dpadY, dpadR*0.2f, paint);
+            if (!controlsVisible) return;
+            
+            // Draw D-Pad cross
+            android.graphics.Path cross = new android.graphics.Path();
+            float bw = dpadUp.rx;
+            float halfW = bw * 0.85f;
+            float armL = dpadR;
+            float r = halfW * 0.3f; // corner radius
+            
+            // Start at top-left of the UP arm
+            cross.moveTo(dpadX - halfW, dpadY - armL + r);
+            cross.quadTo(dpadX - halfW, dpadY - armL, dpadX - halfW + r, dpadY - armL);
+            cross.lineTo(dpadX + halfW - r, dpadY - armL);
+            cross.quadTo(dpadX + halfW, dpadY - armL, dpadX + halfW, dpadY - armL + r);
+            cross.lineTo(dpadX + halfW, dpadY - halfW);
+            // Right arm
+            cross.lineTo(dpadX + armL - r, dpadY - halfW);
+            cross.quadTo(dpadX + armL, dpadY - halfW, dpadX + armL, dpadY - halfW + r);
+            cross.lineTo(dpadX + armL, dpadY + halfW - r);
+            cross.quadTo(dpadX + armL, dpadY + halfW, dpadX + armL - r, dpadY + halfW);
+            cross.lineTo(dpadX + halfW, dpadY + halfW);
+            // Down arm
+            cross.lineTo(dpadX + halfW, dpadY + armL - r);
+            cross.quadTo(dpadX + halfW, dpadY + armL, dpadX + halfW - r, dpadY + armL);
+            cross.lineTo(dpadX - halfW + r, dpadY + armL);
+            cross.quadTo(dpadX - halfW, dpadY + armL, dpadX - halfW, dpadY + armL - r);
+            cross.lineTo(dpadX - halfW, dpadY + halfW);
+            // Left arm
+            cross.lineTo(dpadX - armL + r, dpadY + halfW);
+            cross.quadTo(dpadX - armL, dpadY + halfW, dpadX - armL, dpadY + halfW - r);
+            cross.lineTo(dpadX - armL, dpadY - halfW + r);
+            cross.quadTo(dpadX - armL, dpadY - halfW, dpadX - armL + r, dpadY - halfW);
+            cross.lineTo(dpadX - halfW, dpadY - halfW);
+            cross.close();
+            
+            canvas.drawPath(cross, strokePaint);
+            
+            // Draw pressed state for D-Pad arms
+            if (dpadUp.pressed) canvas.drawRoundRect(new android.graphics.RectF(dpadX - halfW, dpadY - armL, dpadX + halfW, dpadY), r, r, fillPaint);
+            if (dpadDown.pressed) canvas.drawRoundRect(new android.graphics.RectF(dpadX - halfW, dpadY, dpadX + halfW, dpadY + armL), r, r, fillPaint);
+            if (dpadLeft.pressed) canvas.drawRoundRect(new android.graphics.RectF(dpadX - armL, dpadY - halfW, dpadX, dpadY + halfW), r, r, fillPaint);
+            if (dpadRight.pressed) canvas.drawRoundRect(new android.graphics.RectF(dpadX, dpadY - halfW, dpadX + armL, dpadY + halfW), r, r, fillPaint);
+            
+            Paint solidPaint = new Paint();
+            solidPaint.setColor(strokePaint.getColor());
+            solidPaint.setStyle(Paint.Style.FILL);
+            solidPaint.setAntiAlias(true);
+            
+            // Draw center circle
+            canvas.drawCircle(dpadX, dpadY, halfW * 0.45f, solidPaint);
+            
+            // Draw arrows
+            float arrowOffset = armL * 0.7f;
+            float arrowSize = halfW * 0.4f;
+            
+            android.graphics.Path upArrow = new android.graphics.Path();
+            upArrow.moveTo(dpadX, dpadY - arrowOffset - arrowSize);
+            upArrow.lineTo(dpadX - arrowSize, dpadY - arrowOffset + arrowSize);
+            upArrow.lineTo(dpadX + arrowSize, dpadY - arrowOffset + arrowSize);
+            upArrow.close();
+            canvas.drawPath(upArrow, solidPaint);
+            
+            android.graphics.Path downArrow = new android.graphics.Path();
+            downArrow.moveTo(dpadX, dpadY + arrowOffset + arrowSize);
+            downArrow.lineTo(dpadX - arrowSize, dpadY + arrowOffset - arrowSize);
+            downArrow.lineTo(dpadX + arrowSize, dpadY + arrowOffset - arrowSize);
+            downArrow.close();
+            canvas.drawPath(downArrow, solidPaint);
+            
+            android.graphics.Path leftArrow = new android.graphics.Path();
+            leftArrow.moveTo(dpadX - arrowOffset - arrowSize, dpadY);
+            leftArrow.lineTo(dpadX - arrowOffset + arrowSize, dpadY - arrowSize);
+            leftArrow.lineTo(dpadX - arrowOffset + arrowSize, dpadY + arrowSize);
+            leftArrow.close();
+            canvas.drawPath(leftArrow, solidPaint);
+            
+            android.graphics.Path rightArrow = new android.graphics.Path();
+            rightArrow.moveTo(dpadX + arrowOffset + arrowSize, dpadY);
+            rightArrow.lineTo(dpadX + arrowOffset - arrowSize, dpadY - arrowSize);
+            rightArrow.lineTo(dpadX + arrowOffset - arrowSize, dpadY + arrowSize);
+            rightArrow.close();
+            canvas.drawPath(rightArrow, solidPaint);
             
             for (ButtonDef b : buttons) {
                 if (b == dpadUp || b == dpadDown || b == dpadLeft || b == dpadRight) continue;
-                if (b.pressed) paint.setColor(0xCCFFFFFF);
-                else paint.setColor(0x66FFFFFF);
-                canvas.drawCircle(b.x, b.y, b.r, paint);
-                canvas.drawText(b.label, b.x, b.y - ((textPaint.descent() + textPaint.ascent()) / 2), textPaint);
+                
+                if (b.type == 0) {
+                    if (b.pressed) canvas.drawCircle(b.x, b.y, b.rx, fillPaint);
+                    canvas.drawCircle(b.x, b.y, b.rx, strokePaint);
+                } else if (b.type == 1) {
+                    android.graphics.RectF rect = new android.graphics.RectF(b.x - b.rx, b.y - b.ry, b.x + b.rx, b.y + b.ry);
+                    if (b.pressed) canvas.drawRoundRect(rect, b.ry, b.ry, fillPaint);
+                    canvas.drawRoundRect(rect, b.ry, b.ry, strokePaint);
+                }
+                
+                float textY = b.y - ((textPaint.descent() + textPaint.ascent()) / 2);
+                if (b.type == 1) {
+                    float oldSize = textPaint.getTextSize();
+                    textPaint.setTextSize(oldSize * 0.6f);
+                    canvas.drawText(b.label, b.x, b.y - ((textPaint.descent() + textPaint.ascent()) / 2), textPaint);
+                    textPaint.setTextSize(oldSize);
+                } else {
+                    canvas.drawText(b.label, b.x, textY, textPaint);
+                }
             }
         }
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            if (buttons == null) return true;
+            if (buttons == null || toggleButton == null) return true;
             
             boolean[] nextState = new boolean[buttons.length];
+            boolean toggleNextState = false;
             
             int pointerCount = event.getPointerCount();
             for (int i = 0; i < pointerCount; i++) {
@@ -124,28 +249,52 @@ public class MainActivity extends SDLActivity {
                 float x = event.getX(i);
                 float y = event.getY(i);
                 
-                // Check D-Pad
-                float dx = x - dpadX;
-                float dy = y - dpadY;
-                if (dx*dx + dy*dy <= (dpadR*1.8f)*(dpadR*1.8f)) {
-                    if (dy < -dpadR*0.2f) nextState[8] = true; // UP
-                    if (dy > dpadR*0.2f) nextState[9] = true; // DOWN
-                    if (dx < -dpadR*0.2f) nextState[10] = true; // LEFT
-                    if (dx > dpadR*0.2f) nextState[11] = true; // RIGHT
+                // Check toggleButton
+                float tx = x - toggleButton.x;
+                float ty = y - toggleButton.y;
+                if (tx*tx + ty*ty <= (toggleButton.rx*1.8f)*(toggleButton.rx*1.8f)) {
+                    toggleNextState = true;
                 }
                 
-                // Check other buttons
-                for (int j=0; j<8; j++) {
-                    ButtonDef b = buttons[j];
-                    float bx = x - b.x;
-                    float by = y - b.y;
-                    if (bx*bx + by*by <= (b.r*1.8f)*(b.r*1.8f)) {
-                        nextState[j] = true;
+                if (controlsVisible) {
+                    // Check D-Pad
+                    float dx = x - dpadX;
+                    float dy = y - dpadY;
+                    if (dx*dx + dy*dy <= dpadR*dpadR) {
+                        if (dy < -dpadR*0.2f) nextState[8] = true; // UP
+                        if (dy > dpadR*0.2f) nextState[9] = true; // DOWN
+                        if (dx < -dpadR*0.2f) nextState[10] = true; // LEFT
+                        if (dx > dpadR*0.2f) nextState[11] = true; // RIGHT
+                    }
+                    
+                    // Check other buttons
+                    for (int j=0; j<8; j++) {
+                        ButtonDef b = buttons[j];
+                        float bx = x - b.x;
+                        float by = y - b.y;
+                        if (b.type == 0) {
+                            if (bx*bx + by*by <= (b.rx*1.8f)*(b.rx*1.8f)) {
+                                nextState[j] = true;
+                            }
+                        } else if (b.type == 1) {
+                            if (Math.abs(bx) <= b.rx * 1.5f && Math.abs(by) <= b.ry * 2.0f) {
+                                nextState[j] = true;
+                            }
+                        }
                     }
                 }
             }
             
             boolean changed = false;
+            
+            if (toggleButton.pressed != toggleNextState) {
+                toggleButton.pressed = toggleNextState;
+                changed = true;
+                if (toggleNextState) { // Trigger toggle on press down
+                    controlsVisible = !controlsVisible;
+                }
+            }
+            
             for (int i=0; i<buttons.length; i++) {
                 if (buttons[i].pressed != nextState[i]) {
                     buttons[i].pressed = nextState[i];
