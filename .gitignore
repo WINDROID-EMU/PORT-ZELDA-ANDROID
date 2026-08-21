@@ -31,3 +31,6 @@ google-services.json
 
 # Android Profiling
 *.hprof
+jdk-17.0.12+7/
+Rom/
+zelda3_assets.dat
