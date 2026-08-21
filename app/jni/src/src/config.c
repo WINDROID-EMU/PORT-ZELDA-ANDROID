@@ -422,8 +422,14 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
           g_config.extended_aspect_ratio = (h * 16 / 9 - 256) / 2;
         else if (strcmp(s, "16:10") == 0)
           g_config.extended_aspect_ratio = (h * 16 / 10 - 256) / 2;
-        else if (strcmp(s, "18:9") == 0)
+        else if (strcmp(s, "18:9") == 0 || strcmp(s, "2:1") == 0)
           g_config.extended_aspect_ratio = (h * 18 / 9 - 256) / 2;
+        else if (strcmp(s, "19.5:9") == 0 || strcmp(s, "19.5/9") == 0 || strcmp(s, "13:6") == 0)
+          g_config.extended_aspect_ratio = (h * 39 / 18 - 256) / 2;
+        else if (strcmp(s, "20:9") == 0 || strcmp(s, "20/9") == 0)
+          g_config.extended_aspect_ratio = (h * 20 / 9 - 256) / 2;
+        else if (strcmp(s, "21:9") == 0 || strcmp(s, "21/9") == 0)
+          g_config.extended_aspect_ratio = (h * 21 / 9 - 256) / 2;
         else if (strcmp(s, "4:3") == 0)
           g_config.extended_aspect_ratio = 0;
         else if (strcmp(s, "unchanged_sprites") == 0)

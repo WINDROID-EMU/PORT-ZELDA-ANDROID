@@ -8,8 +8,8 @@
 // Build time config options
 enum {
   kEnableLargeScreen = 1,
-  // How much extra spacing to add on the sides
-  kPpuExtraLeftRight = kEnableLargeScreen ? 96 : 0,
+  // How much extra spacing to add on the sides (160 supports up to 21:9 ultrawide)
+  kPpuExtraLeftRight = kEnableLargeScreen ? 160 : 0,
 };
 
 typedef uint8_t uint8;
