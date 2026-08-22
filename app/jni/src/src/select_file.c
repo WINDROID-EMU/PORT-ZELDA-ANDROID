@@ -102,6 +102,8 @@ void SelectFile_Func17(int k) {
     dst++;
   }
   int health = sram[kSrmOffs_Health] >> 3;
+  if ((g_wanted_zelda_features & kFeatures0_MaxHearts) && health < 20)
+    health = 20;
   dst = vram_upload_data + kSelectFile_DrawName_HealthVramOffs[k] / 2;
   uint16 *dst_org = dst;
   int row = 10;
@@ -866,6 +868,10 @@ void NameFile_DoTheNaming() {  // 8cda4d
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0xf8, 0, 0,
   };
   memcpy(sram + 0x340, kSramInit_Normal, 60);
+  if (g_wanted_zelda_features & kFeatures0_MaxHearts) {
+    sram[kSrmOffs_Health] = 0xa0;
+    sram[kSrmOffs_Health + 1] = 0xa0;
+  }
   Intro_FixCksum(sram);
   ZeldaWriteSram();
   ReturnToFileSelect();

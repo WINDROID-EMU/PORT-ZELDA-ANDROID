@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="⚙️ Configurações Zelda 3 (zelda3.ini)"
-                android:textColor="#FFD700"
+                android:textColor="#FFC107"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
@@ -163,13 +163,14 @@
                     android:id="@+id/tab_raw_ini"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:text="📝 Editor .ini"
-                    android:textColor="#B0C2DE"
+                    android:layout_marginBottom="4dp"
                     android:background="@drawable/btn_dark"
-                    android:textSize="12sp"
                     android:gravity="left|center_vertical"
                     android:paddingLeft="8dp"
-                    android:layout_marginBottom="4dp" />
+                    android:text="📝 Editor .ini"
+                    android:textColor="#B0C2DE"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
             </LinearLayout>
         </ScrollView>
 
@@ -439,34 +440,98 @@
                             android:textColorHint="#666666" />
                     </LinearLayout>
 
-                    <!-- Shader -->
+                    <!-- Filtros Gráficos e Shaders (Nitidez e Qualidade Visual) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="8dp">
+                        android:orientation="vertical"
+                        android:background="@drawable/card_bg"
+                        android:padding="10dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginBottom="12dp">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Shader OpenGL (.glsl/.glslp):"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp" />
+                            android:text="Filtros de Imagem e Nitidez (Shaders GLSL)"
+                            android:textColor="#FFD700"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="6dp" />
 
-                        <EditText
-                            android:id="@+id/et_shader"
-                            android:layout_width="160dp"
-                            android:layout_height="36dp"
-                            android:background="@drawable/edit_text_bg"
+                        <!-- CheckBox Ativar Filtros -->
+                        <CheckBox
+                            android:id="@+id/cb_enable_shader"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ativar Filtro de Imagem / Shader"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp"
-                            android:paddingLeft="8dp"
-                            android:paddingRight="8dp"
-                            android:singleLine="true"
-                            android:hint="caminho/shader.glsl"
-                            android:textColorHint="#666666" />
+                            android:layout_marginBottom="6dp" />
+
+                        <!-- Seletor de Preset de Filtro -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="6dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Filtro Pré-definido:"
+                                android:textColor="#FFFFFF"
+                                android:textSize="12sp" />
+
+                            <Spinner
+                                android:id="@+id/sp_shader_preset"
+                                android:layout_width="220dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/edit_text_bg" />
+                        </LinearLayout>
+
+                        <!-- Descrição Dinâmica do Filtro -->
+                        <TextView
+                            android:id="@+id/tv_shader_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Selecione um filtro para melhorar a nitidez, cores ou adicionar efeitos retrô."
+                            android:textColor="#85A5C7"
+                            android:textSize="11sp"
+                            android:textStyle="italic"
+                            android:layout_marginBottom="6dp" />
+
+                        <!-- Caminho Customizado de Shader (Opcional / Personalizado) -->
+                        <LinearLayout
+                            android:id="@+id/layout_custom_shader"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Caminho do Arquivo Shader (.glsl):"
+                                android:textColor="#FFFFFF"
+                                android:textSize="12sp" />
+
+                            <EditText
+                                android:id="@+id/et_shader"
+                                android:layout_width="220dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/edit_text_bg"
+                                android:textColor="#FFFFFF"
+                                android:textSize="12sp"
+                                android:paddingLeft="8dp"
+                                android:paddingRight="8dp"
+                                android:singleLine="true"
+                                android:hint="shaders/sharp_bilinear.glsl"
+                                android:textColorHint="#666666" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>
@@ -650,6 +715,17 @@
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp" />
 
+                    <Button
+                        android:id="@+id/btn_open_item_editor"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/btn_gold"
+                        android:text="🎒 Selecionar / Editar Itens do Inventário"
+                        android:textColor="#000000"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
                     <CheckBox
                         android:id="@+id/cb_item_switch_lr"
                         android:layout_width="match_parent"
@@ -781,6 +857,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="SkipDialogueOnHoldA: Pular diálogos segurando o botão A (3s)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_max_hearts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="MaxHearts: Habilitar todos os 20 corações (Vida Máxima)"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />

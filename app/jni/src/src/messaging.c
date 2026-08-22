@@ -2111,6 +2111,13 @@ void CopySaveToWRAM() {  // 8ccfbb
   if (enhanced_features0 & kFeatures0_MiscBugFixes)
     mosaic_level = 0;
 
+  if (enhanced_features0 & kFeatures0_MaxHearts) {
+    if (link_health_capacity < 0xa0)
+      link_health_capacity = 0xa0;
+    if (link_health_current < link_health_capacity)
+      link_health_current = link_health_capacity;
+  }
+
   hud_var1 = 128;
   main_module_index = 5;
   submodule_index = 0;

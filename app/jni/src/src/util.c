@@ -59,47 +59,57 @@ const char *StringStartsWithNoCase(const char *a, const char *b) {
 }*/
 
 //This was added to read from the external data dir. Android/data/com.dishii.zelda3
+// Reads file from external data dir, absolute path, APK assets, or filesystem
 uint8_t *ReadWholeFile(const char *name, size_t *length) {
-  const char* externalDir = SDL_AndroidGetExternalStoragePath();
+  if (!name || !*name)
+    return NULL;
 
-  if (externalDir) {
-    // Create a file path for the config file in the external storage directory
-    char ExternalFilePath[256];
+  SDL_RWops *rwops = NULL;
+  const char *externalDir = SDL_AndroidGetExternalStoragePath();
+
+  if (name[0] == '/') {
+    // Absolute path
+    rwops = SDL_RWFromFile(name, "rb");
+  } else if (externalDir) {
+    char ExternalFilePath[512];
     snprintf(ExternalFilePath, sizeof(ExternalFilePath), "%s/%s", externalDir, name);
-
-    SDL_RWops *rwops = SDL_RWFromFile(ExternalFilePath, "rb");
-    if (rwops == NULL) {
-      fprintf(stderr, "Failed to open file: %s\n", SDL_GetError());
-      return NULL;
-    }
-
-    size_t size = SDL_RWseek(rwops, 0, RW_SEEK_END);
-    SDL_RWseek(rwops, 0, RW_SEEK_SET);
-
-    uint8_t *buffer = (uint8_t *) malloc(size + 1);
-    if (!buffer) {
-      fprintf(stderr, "malloc failed\n");
-      SDL_RWclose(rwops);
-      return NULL;
-    }
-
-    // Always zero terminate so this function can be used also for strings.
-    buffer[size] = 0;
-
-    if (SDL_RWread(rwops, buffer, 1, size) != size) {
-      fprintf(stderr, "SDL_RWread failed\n");
-      free(buffer);
-      SDL_RWclose(rwops);
-      return NULL;
-    }
-
-    SDL_RWclose(rwops);
-
-    if (length) *length = size;
-    return buffer;
-  }else{
-    return 0;
+    rwops = SDL_RWFromFile(ExternalFilePath, "rb");
   }
+
+  // If not found in external directory, try direct path / APK assets via SDL
+  if (rwops == NULL) {
+    rwops = SDL_RWFromFile(name, "rb");
+  }
+
+  if (rwops == NULL) {
+    fprintf(stderr, "Failed to open file '%s': %s\n", name, SDL_GetError());
+    return NULL;
+  }
+
+  size_t size = SDL_RWseek(rwops, 0, RW_SEEK_END);
+  SDL_RWseek(rwops, 0, RW_SEEK_SET);
+
+  uint8_t *buffer = (uint8_t *) malloc(size + 1);
+  if (!buffer) {
+    fprintf(stderr, "malloc failed\n");
+    SDL_RWclose(rwops);
+    return NULL;
+  }
+
+  // Always zero terminate so this function can be used also for strings.
+  buffer[size] = 0;
+
+  if (size > 0 && SDL_RWread(rwops, buffer, 1, size) != size) {
+    fprintf(stderr, "SDL_RWread failed\n");
+    free(buffer);
+    SDL_RWclose(rwops);
+    return NULL;
+  }
+
+  SDL_RWclose(rwops);
+
+  if (length) *length = size;
+  return buffer;
 }
 
 

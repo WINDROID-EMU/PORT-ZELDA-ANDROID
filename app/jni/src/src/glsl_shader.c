@@ -3,6 +3,7 @@
 #include "glsl_shader.h"
 #include "util.h"
 #include "config.h"
+#include "android_logging.h"
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
@@ -243,7 +244,7 @@ static bool GlslPass_Compile(GlslPass *p, uint type, const uint8 *data, size_t s
   static const char kVertexPrefix[] =   "#define VERTEX\n#define PARAMETER_UNIFORM\n";
   static const char kFragmentPrefixCore[] = "#define FRAGMENT\n#define PARAMETER_UNIFORM\n";
   static const char kFragmentPrefixEs[] = "#define FRAGMENT\n#define PARAMETER_UNIFORM\n" \
-					"precision mediump float;";
+					"precision mediump float;\n";
   const GLchar *strings[3];
   GLint lengths[3];
   char buffer[256];
@@ -284,10 +285,13 @@ static bool GlslPass_Compile(GlslPass *p, uint type, const uint8 *data, size_t s
   if (compile_status != GL_TRUE || buffer[0]) {
     fprintf(stderr, "%s compiling %s shader in file '%s':\n%s\n",
             compile_status != GL_TRUE ? "Error" : "While",
-            type == GL_VERTEX_SHADER ? "vertex" : "fragment", p->filename, buffer);
+            type == GL_VERTEX_SHADER ? "vertex" : "fragment", p->filename ? p->filename : "unknown", buffer);
   }
-  if (compile_status == GL_TRUE)
+  if (compile_status == GL_TRUE) {
+    fprintf(stderr, "Successfully compiled %s shader for '%s'\n",
+            type == GL_VERTEX_SHADER ? "vertex" : "fragment", p->filename ? p->filename : "unknown");
     glAttachShader(p->gl_program, shader);
+  }
   glDeleteShader(shader);
   return (compile_status == GL_TRUE);
 }
@@ -614,7 +618,7 @@ void GlslShader_Render(GlslShader *gs, GlTextureWithSize *tex, int viewport_x, i
 
     glBindTexture(GL_TEXTURE_2D, p[-1].gl_texture);
 
-    uint filter = p->filter ? p->filter : (last_pass && g_config.linear_filtering) ? GL_LINEAR : GL_NEAREST;
+    uint filter = p->filter ? p->filter : GL_LINEAR;
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, p->mipmap_input ? 
                     (filter == GL_LINEAR ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST_MIPMAP_NEAREST) : filter);

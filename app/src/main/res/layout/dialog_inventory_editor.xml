@@ -1,0 +1,838 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#13161C"
+    android:padding="12dp">
+
+    <!-- Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/tv_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="🎒 Editor de Itens &amp; Inventário"
+            android:textColor="#FFD700"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_dialog_title"
+            android:text="Selecione os itens e seus níveis para equipar no Link"
+            android:textColor="#B0C2DE"
+            android:textSize="11sp" />
+
+        <!-- Quick Presets -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_preset_max"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:background="@drawable/btn_gold"
+                android:text="⭐ Tudo no Máx."
+                android:textColor="#000000"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:layout_marginRight="6dp" />
+
+            <Button
+                android:id="@+id/btn_preset_clean"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:background="@drawable/btn_dark"
+                android:text="🧹 Limpar Itens"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Scrollable content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Card 1: Equipamentos de Combate -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_bg"
+                android:padding="10dp"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⚔️ Equipamentos Principais (Armas, Escudos &amp; Armaduras)"
+                    android:textColor="#FFD700"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:rowCount="2">
+
+                    <!-- Espada -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginRight="6dp"
+                        android:layout_marginBottom="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🗡️ Espada (Sword)"
+                            android:textColor="#B0C2DE"
+                            android:textSize="11sp" />
+                        <Spinner
+                            android:id="@+id/sp_item_sword"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Escudo -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginBottom="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🛡️ Escudo (Shield)"
+                            android:textColor="#B0C2DE"
+                            android:textSize="11sp" />
+                        <Spinner
+                            android:id="@+id/sp_item_shield"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Armadura / Túnica -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginRight="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🥋 Armadura / Túnica (Mail)"
+                            android:textColor="#B0C2DE"
+                            android:textSize="11sp" />
+                        <Spinner
+                            android:id="@+id/sp_item_armor"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Luvas de Força -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🥊 Luvas de Força (Gloves)"
+                            android:textColor="#B0C2DE"
+                            android:textSize="11sp" />
+                        <Spinner
+                            android:id="@+id/sp_item_gloves"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+                </GridLayout>
+            </LinearLayout>
+
+            <!-- Card 2: Ferramentas & Armas Secundárias -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_bg"
+                android:padding="10dp"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏹 Ferramentas &amp; Armas Secundárias"
+                    android:textColor="#FFD700"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:rowCount="3">
+
+                    <!-- Arco -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginRight="6dp"
+                        android:layout_marginBottom="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🏹 Arco &amp; Flechas (Bow)"
+                            android:textColor="#B0C2DE"
+                            android:textSize="11sp" />
+                        <Spinner
+                            android:id="@+id/sp_item_bow"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Quantidade de Flechas -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginBottom="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🎯 Qtd. Flechas"
+                            android:textColor="#B0C2DE"
+                            android:textSize="11sp" />
+                        <Spinner
+                            android:id="@+id/sp_item_arrows"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Bumerangue -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginRight="6dp"
+                        android:layout_marginBottom="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🪃 Bumerangue (Boomerang)"
+                            android:textColor="#B0C2DE"
+                            android:textSize="11sp" />
+                        <Spinner
+                            android:id="@+id/sp_item_boomerang"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Cogumelo / Pó Mágico -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginBottom="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🍄 Cogumelo &amp; Pó Mágico"
+                            android:textColor="#B0C2DE"
+                            android:textSize="11sp" />
+                        <Spinner
+                            android:id="@+id/sp_item_mushroom"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Flauta / Pá -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginRight="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🎵 Flauta &amp; Pá (Flute / Shovel)"
+                            android:textColor="#B0C2DE"
+                            android:textSize="11sp" />
+                        <Spinner
+                            android:id="@+id/sp_item_flute"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Bombas (Qtd) -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="💣 Bombas (Quantidade)"
+                            android:textColor="#B0C2DE"
+                            android:textSize="11sp" />
+                        <Spinner
+                            android:id="@+id/sp_item_bombs"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+                </GridLayout>
+
+                <!-- Checkboxes de ferramentas -->
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="3"
+                    android:layout_marginTop="8dp">
+
+                    <CheckBox
+                        android:id="@+id/cb_item_hookshot"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🪝 Hookshot"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_torch"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🏮 Lanterna"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_hammer"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🔨 Martelo"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_bug_net"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🕸️ Rede Insetos"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_book_of_mudora"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="📖 Livro Mudora"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_boots"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="👢 Botas Pegasus"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_flippers"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🏊 Nadadeiras"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_moon_pearl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🔮 Pérola da Lua"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+                </GridLayout>
+            </LinearLayout>
+
+            <!-- Card 3: Itens Mágicos, Medalhões & Cajados -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_bg"
+                android:padding="10dp"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✨ Itens Mágicos, Cajados &amp; Medalhões"
+                    android:textColor="#FFD700"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="3">
+
+                    <CheckBox
+                        android:id="@+id/cb_item_fire_rod"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🔥 Cajado Fogo"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_ice_rod"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="❄️ Cajado Gelo"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_bombos"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="💥 Medalhão Bombos"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_ether"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="⚡ Medalhão Ether"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_quake"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🌋 Medalhão Quake"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_cane_somaria"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🦯 Cetro Somaria"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_cane_byrna"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🪄 Cetro Byrna"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_cape"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🧙 Capa Mágica"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_mirror"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🪞 Espelho Mágico"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+                </GridLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⚡ Consumo de Magia:"
+                        android:textColor="#B0C2DE"
+                        android:textSize="11sp"
+                        android:layout_marginRight="8dp" />
+
+                    <Spinner
+                        android:id="@+id/sp_item_magic_consumption"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/edit_text_bg" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Card 4: Garrafas Mágicas -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_bg"
+                android:padding="10dp"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🧪 Garrafas Mágicas (Slots 1 a 4)"
+                    android:textColor="#FFD700"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:rowCount="2">
+
+                    <!-- Garrafa 1 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginRight="6dp"
+                        android:layout_marginBottom="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🧪 Garrafa 1"
+                            android:textColor="#B0C2DE"
+                            android:textSize="11sp" />
+                        <Spinner
+                            android:id="@+id/sp_item_bottle_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Garrafa 2 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginBottom="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🧪 Garrafa 2"
+                            android:textColor="#B0C2DE"
+                            android:textSize="11sp" />
+                        <Spinner
+                            android:id="@+id/sp_item_bottle_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Garrafa 3 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginRight="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🧪 Garrafa 3"
+                            android:textColor="#B0C2DE"
+                            android:textSize="11sp" />
+                        <Spinner
+                            android:id="@+id/sp_item_bottle_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Garrafa 4 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="6dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🧪 Garrafa 4"
+                            android:textColor="#B0C2DE"
+                            android:textSize="11sp" />
+                        <Spinner
+                            android:id="@+id/sp_item_bottle_4"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+                </GridLayout>
+            </LinearLayout>
+
+            <!-- Card 5: Vida, Pingentes & Cristais -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_bg"
+                android:padding="10dp"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="❤️ Vida, Pingentes &amp; Cristais"
+                    android:textColor="#FFD700"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
+
+                <!-- Corações -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="❤️ Capacidade de Corações:"
+                        android:textColor="#B0C2DE"
+                        android:textSize="11sp"
+                        android:layout_marginRight="8dp" />
+
+                    <Spinner
+                        android:id="@+id/sp_item_hearts"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/edit_text_bg" />
+                </LinearLayout>
+
+                <!-- Pingentes -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🎖️ Pingentes de Hyrule:"
+                    android:textColor="#B0C2DE"
+                    android:textSize="11sp"
+                    android:layout_marginTop="4dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <CheckBox
+                        android:id="@+id/cb_pendant_courage"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🟢 Coragem"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+                    <CheckBox
+                        android:id="@+id/cb_pendant_wisdom"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🔵 Sabedoria"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+                    <CheckBox
+                        android:id="@+id/cb_pendant_power"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🔴 Poder"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <!-- Cristais -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💎 7 Cristais do Dark World:"
+                    android:textColor="#B0C2DE"
+                    android:textSize="11sp"
+                    android:layout_marginTop="4dp" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="4">
+                    <CheckBox
+                        android:id="@+id/cb_crystal_1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="💎 Cristal 1"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+                    <CheckBox
+                        android:id="@+id/cb_crystal_2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="💎 Cristal 2"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+                    <CheckBox
+                        android:id="@+id/cb_crystal_3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="💎 Cristal 3"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+                    <CheckBox
+                        android:id="@+id/cb_crystal_4"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="💎 Cristal 4"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+                    <CheckBox
+                        android:id="@+id/cb_crystal_5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="💎 Cristal 5"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+                    <CheckBox
+                        android:id="@+id/cb_crystal_6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="💎 Cristal 6"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+                    <CheckBox
+                        android:id="@+id/cb_crystal_7"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="💎 Cristal 7"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp" />
+                </GridLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Actions -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/btn_cancel_items"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_dark"
+            android:text="Cancelar"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:layout_marginRight="6dp" />
+
+        <Button
+            android:id="@+id/btn_save_apply_items"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_weight="2"
+            android:background="@drawable/btn_gold"
+            android:text="💾 Salvar &amp; Aplicar no Jogo"
+            android:textColor="#000000"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="6dp" />
+    </LinearLayout>
+</LinearLayout>

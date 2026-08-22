@@ -471,12 +471,42 @@ public class MainActivity extends SDLActivity {
         }
     }
 
+    public static native void nativeReloadConfig();
+    public static native byte[] nativeGetInventory();
+    public static native void nativeSetInventory(byte[] data);
+
+    public static void reloadGameConfig() {
+        try {
+            nativeReloadConfig();
+        } catch (UnsatisfiedLinkError | Exception e) {
+            Log.e("Zelda3", "Erro ao chamar nativeReloadConfig: " + e.getMessage());
+        }
+    }
+
+    public static byte[] getGameInventory() {
+        try {
+            return nativeGetInventory();
+        } catch (UnsatisfiedLinkError | Exception e) {
+            Log.e("Zelda3", "Erro ao chamar nativeGetInventory: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static void setGameInventory(byte[] data) {
+        try {
+            nativeSetInventory(data);
+        } catch (UnsatisfiedLinkError | Exception e) {
+            Log.e("Zelda3", "Erro ao chamar nativeSetInventory: " + e.getMessage());
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         if (hasStoragePermission()) {
             ensureAssetsExtracted();
         }
+        reloadGameConfig();
     }
 
     @Override
@@ -529,12 +559,15 @@ public class MainActivity extends SDLActivity {
         File configFile = new File(externalDir, "zelda3.ini");
         File saves_folder = new File(externalDir + File.separator + "saves");
         File saves_ref_folder = new File(saves_folder + File.separator + "ref");
+        File shaders_folder = new File(externalDir + File.separator + "shaders");
 
         if (!saves_folder.exists()) saves_folder.mkdirs();
         if (!saves_ref_folder.exists()) saves_ref_folder.mkdirs();
+        if (!shaders_folder.exists()) shaders_folder.mkdirs();
 
         try {
             AssetCopyUtil.copyAssetsToExternal(this, "saves/ref", saves_ref_folder.getAbsolutePath());
+            AssetCopyUtil.copyAssetsToExternal(this, "shaders", shaders_folder.getAbsolutePath());
 
             if (!configFile.exists() || configFile.length() == 0) {
                 try (InputStream inputStream = getAssets().open("zelda3.ini")) {

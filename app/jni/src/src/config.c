@@ -359,8 +359,10 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
     } else if (StringEqualsNoCase(key, "OutputMethod")) {
       g_config.output_method = StringEqualsNoCase(value, "SDL-Software") ? kOutputMethod_SDLSoftware :
                                StringEqualsNoCase(value, "OpenGL") ? kOutputMethod_OpenGL : 
-                               StringEqualsNoCase(value, "OpenGL ES") ? kOutputMethod_OpenGL_ES :
-                                                                        kOutputMethod_SDL;
+                               (StringEqualsNoCase(value, "OpenGL ES") || StringEqualsNoCase(value, "OpenGL-ES") ||
+                                StringEqualsNoCase(value, "OpenGL_ES") || StringEqualsNoCase(value, "OpenGLES") ||
+                                StringEqualsNoCase(value, "GLES")) ? kOutputMethod_OpenGL_ES :
+                                                                     kOutputMethod_SDL;
       return true;
     } else if (StringEqualsNoCase(key, "LinearFiltering")) {
       return ParseBool(value, &g_config.linear_filtering);
@@ -483,6 +485,8 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_CancelBirdTravel);
     } else if (StringEqualsNoCase(key, "SkipDialogueOnHoldA") || StringEqualsNoCase(key, "SkipDialogueOnHoldB")) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_SkipDialogueOnHoldA);
+    } else if (StringEqualsNoCase(key, "MaxHearts") || StringEqualsNoCase(key, "AllHearts")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_MaxHearts);
     }
   }
   return false;
@@ -525,6 +529,18 @@ static bool ParseOneConfigFile(const char *filename, int depth) {
 }
 
 void ParseConfigFile(const char *filename) {
+  if (g_config.memory_buffer) {
+    free(g_config.memory_buffer);
+    g_config.memory_buffer = NULL;
+  }
+  memset(&g_config, 0, sizeof(g_config));
+  memset(keymap_hash_first, 0, sizeof(keymap_hash_first));
+  memset(joymap_first, 0, sizeof(joymap_first));
+  memset(has_keynameid, 0, sizeof(has_keynameid));
+  has_joypad_controls = false;
+  keymap_hash_size = 0;
+  joymap_size = 0;
+
   g_config.msuvolume = 100;  // default msu volume, 100%
   g_config.features0 |= kFeatures0_SkipDialogueOnHoldA;
 

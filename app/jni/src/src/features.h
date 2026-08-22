@@ -48,6 +48,8 @@ enum {
   kFeatures0_DimFlashes = 65536,
 
   kFeatures0_SkipDialogueOnHoldA = 131072,
+
+  kFeatures0_MaxHearts = 262144,
 };
 
 #define enhanced_features0 (*(uint32*)(g_ram+0x64c))

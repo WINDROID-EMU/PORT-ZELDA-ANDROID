@@ -6,6 +6,7 @@
 #include "util.h"
 #include "glsl_shader.h"
 #include "config.h"
+#include "android_logging.h"
 
 #define CODE(...) #__VA_ARGS__
 
@@ -169,8 +170,15 @@ static bool OpenGLRenderer_Init(SDL_Window *window) {
     printf("%s\n", infolog);
   }
 
-  if (g_config.shader)
+  if (g_config.shader && *g_config.shader) {
+    fprintf(stderr, "Tentando carregar shader GLSL: %s (GLES=%d)\n", g_config.shader, g_opengl_es);
     g_glsl_shader = GlslShader_CreateFromFile(g_config.shader, g_opengl_es);
+    if (g_glsl_shader != NULL) {
+      fprintf(stderr, "Shader GLSL carregado com SUCESSO: %s\n", g_config.shader);
+    } else {
+      fprintf(stderr, "FALHA ao carregar shader GLSL: %s\n", g_config.shader);
+    }
+  }
   
   return true;
 }
@@ -238,6 +246,7 @@ static void OpenGLRenderer_EndDraw() {
     glBindVertexArray(g_VAO);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
   } else {
+    glBindVertexArray(g_VAO);
     GlslShader_Render(g_glsl_shader, &g_texture, viewport_x, viewport_y, viewport_width, viewport_height);
   }
 
@@ -263,5 +272,23 @@ void OpenGLRenderer_Create(struct RendererFuncs *funcs, bool use_opengl_es) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
   }
   *funcs = kOpenGLRendererFuncs;
+}
+
+void OpenGLRenderer_ReloadShader(const char *shader_path) {
+  if (g_glsl_shader != NULL) {
+    GlslShader_Destroy(g_glsl_shader);
+    g_glsl_shader = NULL;
+  }
+  if (shader_path && *shader_path) {
+    fprintf(stderr, "[Zelda3-GL] Recarregando shader GLSL em tempo real: %s (GLES=%d)\n", shader_path, g_opengl_es);
+    g_glsl_shader = GlslShader_CreateFromFile(shader_path, g_opengl_es);
+    if (g_glsl_shader != NULL) {
+      fprintf(stderr, "[Zelda3-GL] Shader GLSL recarregado com SUCESSO: %s\n", shader_path);
+    } else {
+      fprintf(stderr, "[Zelda3-GL] FALHA ao recarregar shader GLSL: %s\n", shader_path);
+    }
+  } else {
+    fprintf(stderr, "[Zelda3-GL] Shaders desativados (Pixel Art Original ativo)\n");
+  }
 }
 

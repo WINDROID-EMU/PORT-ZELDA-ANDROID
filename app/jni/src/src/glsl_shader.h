@@ -94,6 +94,7 @@ typedef struct GlslShader {
 GlslShader *GlslShader_CreateFromFile(const char *filename, bool opengl_es);
 void GlslShader_Destroy(GlslShader *gs);
 void GlslShader_Render(GlslShader *gs, GlTextureWithSize *tex, int viewport_x, int viewport_y, int viewport_width, int viewport_height);
+void OpenGLRenderer_ReloadShader(const char *shader_path);
 
 
 #endif  // ZELDA3_GLSL_SHADER_H_

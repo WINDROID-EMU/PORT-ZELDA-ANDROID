@@ -276,6 +276,133 @@ static const struct RendererFuncs kSdlRendererFuncs  = {
 };
 
 void OpenGLRenderer_Create(struct RendererFuncs *funcs, bool use_opengl_es);
+void OpenGLRenderer_ReloadShader(const char *shader_path);
+
+#if defined(__ANDROID__)
+#include <jni.h>
+#endif
+
+static volatile int g_config_reload_requested = 0;
+
+void ZeldaRequestConfigReload(void) {
+  g_config_reload_requested = 1;
+}
+
+#include "select_file.h"
+
+#if defined(__ANDROID__)
+JNIEXPORT void JNICALL Java_com_dishii_zelda3_MainActivity_nativeReloadConfig(JNIEnv *env, jclass cls) {
+  (void)env;
+  (void)cls;
+  ZeldaRequestConfigReload();
+}
+
+JNIEXPORT jbyteArray JNICALL Java_com_dishii_zelda3_MainActivity_nativeGetInventory(JNIEnv *env, jclass cls) {
+  (void)cls;
+  jbyteArray array = (*env)->NewByteArray(env, 64);
+  if (!array) return NULL;
+
+  uint8 temp[64];
+  memset(temp, 0, sizeof(temp));
+
+  // Lê da RAM do jogo ativo
+  memcpy(temp, &g_ram[0xF340], 64);
+
+  // Se a RAM estiver zerada (ex: antes de iniciar um jogo), tenta pegar do SRAM
+  if (temp[0x19] == 0 && temp[0x2C] == 0 && g_zenv.sram != NULL) {
+    memcpy(temp, g_zenv.sram + 0x340, 64);
+  }
+
+  (*env)->SetByteArrayRegion(env, array, 0, 64, (jbyte*)temp);
+  return array;
+}
+
+JNIEXPORT void JNICALL Java_com_dishii_zelda3_MainActivity_nativeSetInventory(JNIEnv *env, jclass cls, jbyteArray data) {
+  (void)cls;
+  if (!data) return;
+  jsize len = (*env)->GetArrayLength(env, data);
+  if (len < 64) return;
+
+  jbyte *items = (*env)->GetByteArrayElements(env, data, NULL);
+  if (!items) return;
+
+  memcpy(&g_ram[0xF340], items, 64);
+
+  // Ajusta flags de habilidade caso tenha ganho botas ou nadadeiras
+  if (link_item_flippers) link_ability_flags |= 1;
+  if (link_item_boots) link_ability_flags |= 2;
+
+  // Atualiza vida atual se capacidade foi aumentada
+  if (link_health_current < link_health_capacity || link_health_current == 0) {
+    link_health_current = link_health_capacity;
+  }
+
+  // Se tiver garrafas, ajusta o bottle index caso esteja zerado
+  if (link_item_bottle_index == 0) {
+    for (int i = 0; i < 4; i++) {
+      if (link_bottle_info[i] != 0) {
+        link_item_bottle_index = i + 1;
+        break;
+      }
+    }
+  }
+
+  // Atualiza paletas visuais do Link para refletir nova espada, escudo e armadura
+  LoadGearPalettes(link_sword_type, link_shield_type, link_armor);
+
+  // Notifica engine de emulação/RAM
+  EmuSyncMemoryRegion(&g_ram[0xF340], 64);
+
+  // Sincroniza e grava no arquivo SRAM
+  if (g_zenv.sram != NULL) {
+    uint16 offs = WORD(g_ram[0]);
+    if (offs > 0x1000) offs = 0;
+    memcpy(g_zenv.sram + offs + 0x340, items, 64);
+    memcpy(g_zenv.sram + offs + 0xf00 + 0x340, items, 64);
+    Intro_FixCksum(g_zenv.sram + offs);
+    ZeldaWriteSram();
+  }
+
+  (*env)->ReleaseByteArrayElements(env, data, items, JNI_ABORT);
+}
+#endif
+
+void ZeldaReloadConfig(void) {
+  fprintf(stderr, "[Zelda3] Aplicando configuracoes em tempo real...\n");
+
+  // 1. Recarrega o arquivo zelda3.ini do disco
+  ParseConfigFile(NULL);
+
+  // 2. Atualiza features / cheats / bugfixes em tempo real
+  g_wanted_zelda_features = g_config.features0;
+
+  // 3. Atualiza idioma na engine de texto
+  ZeldaSetLanguage(g_config.language);
+
+  // 4. Atualiza flags de renderizacao PPU
+  g_ppu_render_flags = g_config.new_renderer * kPpuRenderFlags_NewRenderer |
+                       g_config.enhanced_mode7 * kPpuRenderFlags_4x4Mode7 |
+                       g_config.extend_y * kPpuRenderFlags_Height240 |
+                       g_config.no_sprite_limits * kPpuRenderFlags_NoSpriteLimits;
+
+  // 5. Atualiza proporcao de tela estendida / widescreen
+  g_zenv.ppu->extraLeftRight = UintMin(g_config.extended_aspect_ratio, kPpuExtraLeftRight);
+  g_snes_width = (g_config.extended_aspect_ratio * 2 + 256);
+  g_snes_height = (g_config.extend_y ? 240 : 224);
+
+  // 6. Atualiza MSU e volume
+  ZeldaEnableMsu(g_config.enable_msu);
+
+  // 7. Atualiza shaders GLSL se estiver no backend OpenGL
+  if (g_config.output_method == kOutputMethod_OpenGL || g_config.output_method == kOutputMethod_OpenGL_ES) {
+    OpenGLRenderer_ReloadShader(g_config.shader);
+  }
+
+  // 8. Atualiza sprites do Link se customizados
+  LoadLinkGraphics();
+
+  fprintf(stderr, "[Zelda3] Configuracoes aplicadas com sucesso em tempo real!\n");
+}
 
 //#undef main
 int main(int argc, char** argv) {
@@ -339,6 +466,11 @@ int main(int argc, char** argv) {
   bool custom_size  = g_config.window_width != 0 && g_config.window_height != 0;
   int window_width  = custom_size ? g_config.window_width  : g_current_window_scale * g_snes_width;
   int window_height = custom_size ? g_config.window_height : g_current_window_scale * g_snes_height;
+
+  if (g_config.shader && *g_config.shader && g_config.output_method == kOutputMethod_SDL) {
+    fprintf(stderr, "Shader ativo ('%s'): alternando automaticamente para backend OpenGL ES\n", g_config.shader);
+    g_config.output_method = kOutputMethod_OpenGL_ES;
+  }
 
   if (g_config.output_method == kOutputMethod_OpenGL ||
       g_config.output_method == kOutputMethod_OpenGL_ES) {
@@ -405,6 +537,11 @@ int main(int argc, char** argv) {
     HandleCommand(kKeys_Load + 0, true);
 
   while(running) {
+    if (g_config_reload_requested) {
+      g_config_reload_requested = 0;
+      ZeldaReloadConfig();
+    }
+
     while(SDL_PollEvent(&event)) {
       switch(event.type) {
       case SDL_CONTROLLERDEVICEADDED:
@@ -803,8 +940,10 @@ static void LoadLinkGraphics() {
     size_t length = 0;
     uint8 *file = ReadWholeFile(g_config.link_graphics, &length);
     if (file == NULL || !ParseLinkGraphics(file, length))
-      Die("Unable to load file");
-    free(file);
+      fprintf(stderr, "Unable to load Link Graphics: %s\n", g_config.link_graphics);
+    else
+      fprintf(stderr, "Link Graphics loaded successfully: %s\n", g_config.link_graphics);
+    if (file) free(file);
   }
 }
 

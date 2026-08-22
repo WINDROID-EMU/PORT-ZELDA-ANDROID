@@ -324,7 +324,7 @@ static void EmuSynchronizeWholeState() {
 
 // |ptr| must be a pointer into g_ram, will synchronize the RAM memory with the
 // emulator.
-static void EmuSyncMemoryRegion(void *ptr, size_t n) {
+void EmuSyncMemoryRegion(void *ptr, size_t n) {
   uint8 *data = (uint8 *)ptr;
   assert(data >= g_ram && data < g_ram + 0x20000);
   if (g_emu_memory_ptr)
@@ -763,6 +763,11 @@ bool ZeldaRunFrame(int inputs) {
         enhanced_features0 = g_wanted_zelda_features;
         EmuSyncMemoryRegion(&enhanced_features0, sizeof(enhanced_features0));
         StateRecorder_RecordPatchByte(&state_recorder, kRam_Features0, (uint8 *)&enhanced_features0, 4);
+        if ((enhanced_features0 & kFeatures0_MaxHearts) && link_health_capacity < 0xa0) {
+          link_health_capacity = 0xa0;
+          if (link_health_current < 0xa0)
+            link_health_current = 0xa0;
+        }
       }
     }
   }

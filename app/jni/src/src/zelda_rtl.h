@@ -57,6 +57,8 @@ void ZeldaApuUnlock();
 bool ZeldaIsPlayingMusicTrack(uint8 track);
 uint8 ZeldaGetEntranceMusicTrack(int track);
 void ZeldaSetLanguage(const char *language);
+void ZeldaReloadConfig(void);
+void ZeldaRequestConfigReload(void);
 void PatchCommand(char cmd);
 
 // Things for state management
@@ -71,6 +73,7 @@ SDL_RWops* SDL_RWFromFileInExternal(const char *filename, const char *mode);
 void SaveLoadSlot(int cmd, int which);
 void ZeldaWriteSram();
 void ZeldaReadSram();
+void EmuSyncMemoryRegion(void *ptr, size_t n);
 
 typedef void ZeldaRunFrameFunc(uint16 input, int run_what);
 typedef void ZeldaSyncAllFunc();
