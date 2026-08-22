@@ -433,19 +433,20 @@ public class MainActivity extends SDLActivity {
             }
 
             File assetsFile = new File(externalDir, "zelda3_assets.dat");
-            if (!assetsFile.exists() || assetsFile.length() < 700000) {
-                Log.i("Zelda3", "Copiando zelda3_assets.dat para " + assetsFile.getAbsolutePath());
-                try (InputStream assetIn = getAssets().open("zelda3_assets.dat")) {
+            try (InputStream assetIn = getAssets().open("zelda3_assets.dat")) {
+                int expectedSize = assetIn.available();
+                if (!assetsFile.exists() || assetsFile.length() != expectedSize) {
+                    Log.i("Zelda3", "Copiando zelda3_assets.dat para " + assetsFile.getAbsolutePath() + " (esperado: " + expectedSize + " bytes, atual: " + assetsFile.length() + " bytes)");
                     writeDataToFile(assetsFile, assetIn);
                     Log.i("Zelda3", "zelda3_assets.dat copiado com sucesso. Tamanho: " + assetsFile.length());
-                } catch (IOException e) {
-                    Log.e("Zelda3", "Erro ao copiar zelda3_assets.dat: " + e.getMessage());
-                    if (assetsFile.exists()) {
-                        assetsFile.delete();
-                    }
+                } else {
+                    Log.i("Zelda3", "zelda3_assets.dat valido ja existe em " + assetsFile.getAbsolutePath() + ", pulando copia.");
                 }
-            } else {
-                Log.i("Zelda3", "zelda3_assets.dat valido ja existe em " + assetsFile.getAbsolutePath() + ", pulando copia.");
+            } catch (IOException e) {
+                Log.e("Zelda3", "Erro ao copiar zelda3_assets.dat: " + e.getMessage());
+                if (assetsFile.exists() && assetsFile.length() != 683888L) {
+                    assetsFile.delete();
+                }
             }
 
         } catch (IOException e) {
