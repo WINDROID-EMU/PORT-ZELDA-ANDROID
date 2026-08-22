@@ -775,6 +775,15 @@
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_skip_dialogue_a"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="SkipDialogueOnHoldA: Pular diálogos segurando o botão A (3s)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
                 </LinearLayout>
             </ScrollView>
 

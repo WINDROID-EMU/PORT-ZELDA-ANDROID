@@ -16,6 +16,7 @@
 #include "attract.h"
 #include "nmi.h"
 #include "assets.h"
+#include "features.h"
 
 static void WorldMap_AddSprite(int spr, uint8 big, uint8 flags, uint8 ch, uint16 x, uint16 y);
 static bool WorldMap_CalculateOamCoordinates(Point16U *pt);
@@ -2337,7 +2338,25 @@ uint8 Text_FilterPlayerNameCharacters(uint8 a) {  // 8ec639
   return a;
 }
 
+static uint16 dialogue_a_hold_timer = 0;
+
 void Text_Render() {  // 8ec8d9
+  if (main_module_index == 14 && submodule_index == 2) {
+    if ((enhanced_features0 & kFeatures0_SkipDialogueOnHoldA) && ((joypad1L_last & 0x80) || (joypad1H_last & 0x80))) {
+      dialogue_a_hold_timer++;
+      if (dialogue_a_hold_timer >= 30) {
+        text_wait_countdown = 0;
+        text_wait_countdown2 = 0;
+        text_render_state = 4;
+        RenderText_Draw_Finish();
+        return;
+      }
+    } else {
+      dialogue_a_hold_timer = 0;
+    }
+  } else {
+    dialogue_a_hold_timer = 0;
+  }
   kText_Render[text_render_state]();
 }
 
@@ -2387,6 +2406,9 @@ RESTART:;
 
   switch (TEXTCMD_CMD(cmd)) {
   case kTextCmd_IsLetter:
+    if ((enhanced_features0 & kFeatures0_SkipDialogueOnHoldA) && ((joypad1L_last & 0x80) || (joypad1H_last & 0x80))) {
+      vwf_line_speed_cur = 0;
+    }
     if (vwf_line_speed_cur >= 2) {
       vwf_line_speed_cur--;
       break;
@@ -2448,6 +2470,10 @@ RESTART:;
     vwf_flag_next_line = 1;
     goto COMMAND_DONE;
   case kTextCmd_Wait:  // RenderText_Draw_Wait
+    if ((enhanced_features0 & kFeatures0_SkipDialogueOnHoldA) && ((joypad1L_last & 0x80) || (joypad1H_last & 0x80))) {
+      BYTE(text_wait_countdown) = 0;
+      goto COMMAND_DONE;
+    }
     switch (joypad1L_last & 0x80 ? 1 : text_wait_countdown) {
     case 0:
       text_wait_countdown = kText_WaitDurations[TEXTCMD_PARAM(cmd)] - 1;
@@ -2467,6 +2493,10 @@ RESTART:;
     vwf_line_speed = vwf_line_speed_cur = TEXTCMD_PARAM(cmd);
     goto COMMAND_DONE;
   case kTextCmd_Waitkey:  // RenderText_Draw_PauseForInput
+    if ((enhanced_features0 & kFeatures0_SkipDialogueOnHoldA) && ((joypad1L_last & 0x80) || (joypad1H_last & 0x80))) {
+      text_wait_countdown2 = 0;
+      goto COMMAND_DONE;
+    }
     if (text_wait_countdown2 != 0) {
       if (--text_wait_countdown2 == 1)
         sound_effect_2 = 36;
@@ -2478,6 +2508,11 @@ RESTART:;
     }
     break;
   case kTextCmd_EndMessage:  // RenderText_Draw_Terminate
+    if ((enhanced_features0 & kFeatures0_SkipDialogueOnHoldA) && ((joypad1L_last & 0x80) || (joypad1H_last & 0x80))) {
+      text_render_state = 4;
+      text_wait_countdown2 = 0;
+      break;
+    }
     if (text_wait_countdown2 != 0) {
       if (--text_wait_countdown2 == 1)
         sound_effect_2 = 36;

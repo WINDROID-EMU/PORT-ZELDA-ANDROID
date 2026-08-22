@@ -481,6 +481,8 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_GameChangingBugFixes);
     } else if (StringEqualsNoCase(key, "CancelBirdTravel")) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_CancelBirdTravel);
+    } else if (StringEqualsNoCase(key, "SkipDialogueOnHoldA") || StringEqualsNoCase(key, "SkipDialogueOnHoldB")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_SkipDialogueOnHoldA);
     }
   }
   return false;
@@ -524,6 +526,7 @@ static bool ParseOneConfigFile(const char *filename, int depth) {
 
 void ParseConfigFile(const char *filename) {
   g_config.msuvolume = 100;  // default msu volume, 100%
+  g_config.features0 |= kFeatures0_SkipDialogueOnHoldA;
 
   if (filename != NULL || !ParseOneConfigFile("zelda3.user.ini", 0)) {
     if (filename == NULL)

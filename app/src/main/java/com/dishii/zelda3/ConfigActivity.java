@@ -52,7 +52,7 @@ public class ConfigActivity extends Activity {
     private CheckBox cbItemSwitchLr, cbItemSwitchLimit, cbTurnWhileDashing, cbMirrorDarkworld,
             cbCollectWithSword, cbBreakPots, cbDisableLowHealthBeep, cbSkipIntro,
             cbShowMaxYellow, cbMoreActiveBombs, cbCarryMoreRupees, cbMiscBugFixes,
-            cbGameChangingBugFixes, cbCancelBirdTravel;
+            cbGameChangingBugFixes, cbCancelBirdTravel, cbSkipDialogueA;
 
     // Raw INI
     private EditText etRawIni;
@@ -147,6 +147,7 @@ public class ConfigActivity extends Activity {
         cbMiscBugFixes = findViewById(R.id.cb_misc_bug_fixes);
         cbGameChangingBugFixes = findViewById(R.id.cb_game_changing_bug_fixes);
         cbCancelBirdTravel = findViewById(R.id.cb_cancel_bird_travel);
+        cbSkipDialogueA = findViewById(R.id.cb_skip_dialogue_a);
 
         // Raw
         etRawIni = findViewById(R.id.et_raw_ini);
@@ -262,6 +263,7 @@ public class ConfigActivity extends Activity {
         cbMiscBugFixes.setChecked(configHelper.getBoolValue("Features", "MiscBugFixes", false));
         cbGameChangingBugFixes.setChecked(configHelper.getBoolValue("Features", "GameChangingBugFixes", false));
         cbCancelBirdTravel.setChecked(configHelper.getBoolValue("Features", "CancelBirdTravel", false));
+        cbSkipDialogueA.setChecked(configHelper.getBoolValue("Features", "SkipDialogueOnHoldA", true));
 
         // Raw
         etRawIni.setText(configHelper.getRawText());
@@ -333,6 +335,7 @@ public class ConfigActivity extends Activity {
         configHelper.setBoolValue("Features", "MiscBugFixes", cbMiscBugFixes.isChecked());
         configHelper.setBoolValue("Features", "GameChangingBugFixes", cbGameChangingBugFixes.isChecked());
         configHelper.setBoolValue("Features", "CancelBirdTravel", cbCancelBirdTravel.isChecked());
+        configHelper.setBoolValue("Features", "SkipDialogueOnHoldA", cbSkipDialogueA.isChecked());
 
         etRawIni.setText(configHelper.getRawText());
     }
