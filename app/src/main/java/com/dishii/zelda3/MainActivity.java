@@ -178,6 +178,33 @@ public class MainActivity extends SDLActivity {
             }
         }
 
+        private boolean isTouchOverButton(float x, float y) {
+            if (toggleButton != null) {
+                float tx = x - toggleButton.x;
+                float ty = y - toggleButton.y;
+                if (tx * tx + ty * ty <= (toggleButton.rx * 1.8f) * (toggleButton.rx * 1.8f)) {
+                    return true;
+                }
+            }
+            if (buttons != null) {
+                for (int j = 0; j < 8; j++) {
+                    ButtonDef b = buttons[j];
+                    float bx = x - b.x;
+                    float by = y - b.y;
+                    if (b.type == 0) {
+                        if (bx * bx + by * by <= (b.rx * 1.8f) * (b.rx * 1.8f)) {
+                            return true;
+                        }
+                    } else if (b.type == 1) {
+                        if (Math.abs(bx) <= b.rx * 1.5f && Math.abs(by) <= b.ry * 2.0f) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             if (buttons == null || toggleButton == null) return true;
@@ -198,8 +225,8 @@ public class MainActivity extends SDLActivity {
             if (controlsVisible && (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN)) {
                 float tx = event.getX(actionIndex);
                 float ty = event.getY(actionIndex);
-                // Left half of screen, below the L button
-                if (tx < getWidth() / 2f && ty > getHeight() * 0.35f) {
+                // Left half of screen, below the L button, and not over any button
+                if (tx < getWidth() / 2f && ty > getHeight() * 0.35f && !isTouchOverButton(tx, ty)) {
                     if (analogPointerId == -1) {
                         analogPointerId = actionId;
                         currentDpadX = tx;
@@ -325,6 +352,39 @@ public class MainActivity extends SDLActivity {
             mLayout.addView(gamepad, params);
         }
 
+        if (!hasStoragePermission()) {
+            requestStoragePermission();
+        } else {
+            ensureAssetsExtracted();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (hasStoragePermission()) {
+            ensureAssetsExtracted();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (hasStoragePermission()) {
+            ensureAssetsExtracted();
+        }
+    }
+
+    private boolean hasStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        }
+        return true;
+    }
+
+    private void requestStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()) {
                 try {
@@ -343,84 +403,72 @@ public class MainActivity extends SDLActivity {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             }
         }
+    }
 
-        // Check if external storage is available
-        if (isExternalStorageWritable()) {
-            // Get the root directory of the external storage
-            File externalDir = getExternalFilesDir(null);
+    private void ensureAssetsExtracted() {
+        if (!hasStoragePermission() || !isExternalStorageWritable()) {
+            Log.w("Zelda3", "Sem permissao de armazenamento ou armazenamento indisponivel para copiar assets.");
+            return;
+        }
 
-            if (externalDir != null) {
+        File externalDir = getExternalFilesDir(null);
+        if (externalDir == null) return;
 
-                // Create a file object for the config file
-                File configFile = new File(externalDir, "zelda3.ini");
+        File configFile = new File(externalDir, "zelda3.ini");
+        File saves_folder = new File(externalDir + File.separator + "saves");
+        File saves_ref_folder = new File(saves_folder + File.separator + "ref");
 
-                File datNotice = new File(externalDir, "PLACE zelda3_assets.dat HERE");
+        if (!saves_folder.exists()) saves_folder.mkdirs();
+        if (!saves_ref_folder.exists()) saves_ref_folder.mkdirs();
 
-                File saves_folder = new File(externalDir+ File.separator + "saves");
+        try {
+            AssetCopyUtil.copyAssetsToExternal(this, "saves/ref", saves_ref_folder.getAbsolutePath());
 
-                File saves_ref_folder = new File(saves_folder + File.separator + "ref");
-
-                // Check if the folder doesn't exist, then create it
-                saves_folder.mkdirs();
-
-                saves_ref_folder.mkdirs();
-
-
-                //copy reference saves and config to external data dir so user can change if needed.
-
-                try {
-                    AssetCopyUtil.copyAssetsToExternal(this, "saves/ref", getExternalFilesDir(null).getAbsolutePath() + "/saves/ref");
-                    if (configFile.createNewFile()) {
-                        InputStream inputStream;
-                        try {
-                            inputStream = getAssets().open("zelda3.ini");  // Replace with your actual asset file name
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            return;
-                        }
-                        // Write configuration data to configFile
-                        writeDataToFile(configFile,inputStream);
-                    }
-
-                    // Copia zelda3_assets.dat dos assets para /sdcard/zelda/ se ainda não existir
-                    File assetsFile = new File(externalDir, "zelda3_assets.dat");
-                    if (!assetsFile.exists()) {
-                        Log.i("Zelda3", "Copiando zelda3_assets.dat para " + assetsFile.getAbsolutePath());
-                        try {
-                            InputStream assetIn = getAssets().open("zelda3_assets.dat");
-                            writeDataToFile(assetsFile, assetIn);
-                            Log.i("Zelda3", "zelda3_assets.dat copiado com sucesso.");
-                        } catch (IOException e) {
-                            Log.e("Zelda3", "Erro ao copiar zelda3_assets.dat: " + e.getMessage());
-                            e.printStackTrace();
-                        }
-                    } else {
-                        Log.i("Zelda3", "zelda3_assets.dat ja existe em " + assetsFile.getAbsolutePath() + ", pulando copia.");
-                    }
-
+            if (!configFile.exists() || configFile.length() == 0) {
+                try (InputStream inputStream = getAssets().open("zelda3.ini")) {
+                    writeDataToFile(configFile, inputStream);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e("Zelda3", "Erro ao copiar zelda3.ini: " + e.getMessage());
                 }
-
             }
+
+            File assetsFile = new File(externalDir, "zelda3_assets.dat");
+            if (!assetsFile.exists() || assetsFile.length() < 700000) {
+                Log.i("Zelda3", "Copiando zelda3_assets.dat para " + assetsFile.getAbsolutePath());
+                try (InputStream assetIn = getAssets().open("zelda3_assets.dat")) {
+                    writeDataToFile(assetsFile, assetIn);
+                    Log.i("Zelda3", "zelda3_assets.dat copiado com sucesso. Tamanho: " + assetsFile.length());
+                } catch (IOException e) {
+                    Log.e("Zelda3", "Erro ao copiar zelda3_assets.dat: " + e.getMessage());
+                    if (assetsFile.exists()) {
+                        assetsFile.delete();
+                    }
+                }
+            } else {
+                Log.i("Zelda3", "zelda3_assets.dat valido ja existe em " + assetsFile.getAbsolutePath() + ", pulando copia.");
+            }
+
+        } catch (IOException e) {
+            Log.e("Zelda3", "Erro ao copiar assets: " + e.getMessage());
         }
     }
 
-    private void writeDataToFile(File file,InputStream inputStream) {
-        try {
-            // Copy the content from the asset InputStream to the target file
-            FileOutputStream outputStream = new FileOutputStream(file);
-            byte[] buffer = new byte[1024];
+    private void writeDataToFile(File file, InputStream inputStream) {
+        try (FileOutputStream outputStream = new FileOutputStream(file)) {
+            byte[] buffer = new byte[8192];
             int length;
             while ((length = inputStream.read(buffer)) > 0) {
                 outputStream.write(buffer, 0, length);
             }
-            outputStream.close();
-            inputStream.close();
+            outputStream.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("Zelda3", "Falha ao escrever no arquivo " + file.getAbsolutePath() + ": " + e.getMessage());
+            if (file.exists()) {
+                file.delete();
+            }
         }
     }
+
     // Check if external storage is available and writable
     private boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
