@@ -44,9 +44,8 @@ public class ConfigActivity extends Activity {
     private Button btnOpenItemEditor;
 
     // General controls
-    private Spinner spAspectRatio;
+    private Spinner spAspectRatio, spLanguage;
     private CheckBox cbAutosave, cbDisableFrameDelay, cbDisplayPerf;
-    private EditText etLanguage;
 
     // Graphics controls
     private Spinner spOutputMethod, spWindowScale, spShaderPreset;
@@ -70,6 +69,26 @@ public class ConfigActivity extends Activity {
 
     // Raw INI
     private EditText etRawIni;
+
+    public static class LanguageOption {
+        public final String name;
+        public final String code;
+
+        public LanguageOption(String name, String code) {
+            this.name = name;
+            this.code = code;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    private static final List<LanguageOption> LANGUAGE_OPTIONS = Arrays.asList(
+            new LanguageOption("Português do Brasil (pt)", "pt"),
+            new LanguageOption("English / Original (us)", "us")
+    );
 
     public static class ShaderPreset {
         public final String name;
@@ -153,7 +172,7 @@ public class ConfigActivity extends Activity {
         cbAutosave = findViewById(R.id.cb_autosave);
         cbDisableFrameDelay = findViewById(R.id.cb_disable_frame_delay);
         cbDisplayPerf = findViewById(R.id.cb_display_perf);
-        etLanguage = findViewById(R.id.et_language);
+        spLanguage = findViewById(R.id.sp_language);
 
         // Graphics
         spOutputMethod = findViewById(R.id.sp_output_method);
@@ -215,6 +234,12 @@ public class ConfigActivity extends Activity {
         setupSpinnerAdapter(spAudioChannels, AUDIO_CHANNELS);
         setupSpinnerAdapter(spEnableMsu, MSU_OPTIONS);
 
+        List<String> langNames = new ArrayList<>();
+        for (LanguageOption opt : LANGUAGE_OPTIONS) {
+            langNames.add(opt.name);
+        }
+        setupSpinnerAdapter(spLanguage, langNames);
+
         List<String> presetNames = new ArrayList<>();
         for (ShaderPreset p : SHADER_PRESETS) {
             presetNames.add(p.name);
@@ -258,9 +283,14 @@ public class ConfigActivity extends Activity {
         cbAutosave.setChecked(configHelper.getBoolValue("General", "Autosave", false));
         cbDisableFrameDelay.setChecked(configHelper.getBoolValue("General", "DisableFrameDelay", false));
         cbDisplayPerf.setChecked(configHelper.getBoolValue("General", "DisplayPerfInTitle", false));
-        String lang = configHelper.getValue("General", "Language", "");
+        String lang = configHelper.getValue("General", "Language", "pt");
         if (lang != null && lang.contains("#")) lang = lang.substring(0, lang.indexOf('#')).trim();
-        etLanguage.setText(lang);
+        if (lang != null && lang.contains(";")) lang = lang.substring(0, lang.indexOf(';')).trim();
+        if (lang == null || lang.isEmpty() || lang.equalsIgnoreCase("pt") || lang.equalsIgnoreCase("pt-br") || lang.equalsIgnoreCase("pt_br")) {
+            spLanguage.setSelection(0); // Português do Brasil (pt)
+        } else {
+            spLanguage.setSelection(1); // English / Original (us)
+        }
 
         // Graphics
         String outputMethod = configHelper.getValue("Graphics", "OutputMethod", "SDL");
@@ -379,11 +409,11 @@ public class ConfigActivity extends Activity {
         configHelper.setBoolValue("General", "Autosave", cbAutosave.isChecked());
         configHelper.setBoolValue("General", "DisableFrameDelay", cbDisableFrameDelay.isChecked());
         configHelper.setBoolValue("General", "DisplayPerfInTitle", cbDisplayPerf.isChecked());
-        String lang = etLanguage.getText().toString().trim();
-        if (!lang.isEmpty()) {
-            configHelper.setValue("General", "Language", lang);
+        int selectedLangPos = spLanguage.getSelectedItemPosition();
+        if (selectedLangPos >= 0 && selectedLangPos < LANGUAGE_OPTIONS.size()) {
+            configHelper.setValue("General", "Language", LANGUAGE_OPTIONS.get(selectedLangPos).code);
         } else {
-            configHelper.removeKey("General", "Language");
+            configHelper.setValue("General", "Language", "pt");
         }
 
         // Graphics

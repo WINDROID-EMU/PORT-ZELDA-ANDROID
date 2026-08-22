@@ -269,22 +269,15 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Idioma (Language - requer pacote no assets):"
+                            android:text="Idioma dos Diálogos (Language):"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp" />
 
-                        <EditText
-                            android:id="@+id/et_language"
+                        <Spinner
+                            android:id="@+id/sp_language"
                             android:layout_width="160dp"
                             android:layout_height="36dp"
-                            android:background="@drawable/edit_text_bg"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp"
-                            android:paddingLeft="8dp"
-                            android:paddingRight="8dp"
-                            android:singleLine="true"
-                            android:hint="Ex: pt, en, de"
-                            android:textColorHint="#666666" />
+                            android:background="@drawable/edit_text_bg" />
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>

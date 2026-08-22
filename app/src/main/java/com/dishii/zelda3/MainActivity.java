@@ -589,7 +589,7 @@ public class MainActivity extends SDLActivity {
                 }
             } catch (IOException e) {
                 Log.e("Zelda3", "Erro ao copiar zelda3_assets.dat: " + e.getMessage());
-                if (assetsFile.exists() && assetsFile.length() != 683888L) {
+                if (assetsFile.exists() && assetsFile.length() <= 0) {
                     assetsFile.delete();
                 }
             }
