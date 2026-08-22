@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*' # Trigger ao criar uma tag (ex: v1.0.0)
   workflow_dispatch: # Permite iniciar manualmente pela aba Actions
+    inputs:
+      tag_name:
+        description: 'Tag para a Release (ex: v1.0.0 ou latest)'
+        required: false
+        default: 'latest'
 
 permissions:
   contents: write # Necessário para o bot criar a release
@@ -38,11 +43,11 @@ jobs:
         run: mv app/build/outputs/apk/debug/app-debug.apk Zelda3-Android.apk
 
       - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: Zelda3-Android.apk
-          name: Release ${{ github.ref_name }}
+          name: Release ${{ github.ref_type == 'tag' && github.ref_name || (inputs.tag_name || 'latest') }}
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || (inputs.tag_name || 'latest') }}
           draft: false
           prerelease: false
         env:
