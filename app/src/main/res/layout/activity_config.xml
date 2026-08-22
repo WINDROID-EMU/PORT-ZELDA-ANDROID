@@ -1,0 +1,833 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0B0E14"
+    android:padding="8dp">
+
+    <!-- Top Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="6dp"
+        android:paddingTop="2dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚙️ Configurações Zelda 3 (zelda3.ini)"
+                android:textColor="#FFD700"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="As alterações são gravadas em zelda3.ini. Toque em Salvar para aplicar."
+                android:textColor="#8B9BB4"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_restore_defaults"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:background="@drawable/btn_danger"
+                android:text="Restaurar Padrão"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginRight="6dp" />
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:background="@drawable/btn_gold"
+                android:text="💾 Salvar"
+                android:textColor="#1A1500"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:layout_marginRight="6dp" />
+
+            <Button
+                android:id="@+id/btn_close"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:background="@drawable/btn_dark"
+                android:text="✕ Fechar"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#1E2836"
+        android:layout_marginBottom="6dp" />
+
+    <!-- Main Content Area: Left Tabs + Right Settings Panel -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <!-- Left Tabs Navigation -->
+        <ScrollView
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/card_bg"
+            android:padding="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/tab_general"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="🎮 Geral"
+                    android:textColor="#FFD700"
+                    android:background="@drawable/btn_dark"
+                    android:textSize="12sp"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="8dp"
+                    android:layout_marginBottom="4dp" />
+
+                <Button
+                    android:id="@+id/tab_graphics"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="🎨 Gráficos"
+                    android:textColor="#B0C2DE"
+                    android:background="@drawable/btn_dark"
+                    android:textSize="12sp"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="8dp"
+                    android:layout_marginBottom="4dp" />
+
+                <Button
+                    android:id="@+id/tab_sound"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="🔊 Áudio"
+                    android:textColor="#B0C2DE"
+                    android:background="@drawable/btn_dark"
+                    android:textSize="12sp"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="8dp"
+                    android:layout_marginBottom="4dp" />
+
+                <Button
+                    android:id="@+id/tab_features"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="⚔️ Gameplay"
+                    android:textColor="#B0C2DE"
+                    android:background="@drawable/btn_dark"
+                    android:textSize="12sp"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="8dp"
+                    android:layout_marginBottom="4dp" />
+
+                <Button
+                    android:id="@+id/tab_raw_ini"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="📝 Editor .ini"
+                    android:textColor="#B0C2DE"
+                    android:background="@drawable/btn_dark"
+                    android:textSize="12sp"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="8dp"
+                    android:layout_marginBottom="4dp" />
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Right Content Container -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="6dp"
+            android:background="@drawable/card_bg"
+            android:padding="8dp">
+
+            <!-- Panel 1: Geral (General) -->
+            <ScrollView
+                android:id="@+id/panel_general"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Configurações Gerais [General]"
+                        android:textColor="#FFD700"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Extended Aspect Ratio -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Proporção de Tela Widescreen (ExtendedAspectRatio):"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+
+                        <Spinner
+                            android:id="@+id/sp_aspect_ratio"
+                            android:layout_width="160dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Autosave -->
+                    <CheckBox
+                        android:id="@+id/cb_autosave"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Autosave: Salvar estado ao sair e recarregar ao iniciar"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- DisableFrameDelay -->
+                    <CheckBox
+                        android:id="@+id/cb_disable_frame_delay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Desativar atraso de quadros (DisableFrameDelay - para telas a 60Hz)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- DisplayPerfInTitle -->
+                    <CheckBox
+                        android:id="@+id/cb_display_perf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Exibir desempenho de FPS no título (DisplayPerfInTitle)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Language -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Idioma (Language - requer pacote no assets):"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+
+                        <EditText
+                            android:id="@+id/et_language"
+                            android:layout_width="160dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:singleLine="true"
+                            android:hint="Ex: pt, en, de"
+                            android:textColorHint="#666666" />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+            <!-- Panel 2: Gráficos (Graphics) -->
+            <ScrollView
+                android:id="@+id/panel_graphics"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Configurações de Vídeo e Gráficos [Graphics]"
+                        android:textColor="#FFD700"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- OutputMethod -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Método de Saída Gráfica (OutputMethod):"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+
+                        <Spinner
+                            android:id="@+id/sp_output_method"
+                            android:layout_width="160dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Window Scale -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Escala de Renderização (WindowScale):"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+
+                        <Spinner
+                            android:id="@+id/sp_window_scale"
+                            android:layout_width="160dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <CheckBox
+                        android:id="@+id/cb_new_renderer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="NewRenderer: PPU SNES Otimizado"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_enhanced_mode7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="EnhancedMode7: Mapa do mundo em alta resolução"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_no_sprite_limits"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="NoSpriteLimits: Remove limite de sprites por scanline (sem flicker)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_linear_filtering"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="LinearFiltering: Filtro suave / bilinear"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_ignore_aspect_ratio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="IgnoreAspectRatio: Esticar imagem para tela cheia"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_dim_flashes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="DimFlashes: Reduzir clarões e efeitos de flash intenso (Virtual Console)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Custom Sprite / LinkGraphics -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Sprite Customizado do Link (LinkGraphics .zspr):"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+
+                        <EditText
+                            android:id="@+id/et_link_graphics"
+                            android:layout_width="160dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:singleLine="true"
+                            android:hint="caminho/para.zspr"
+                            android:textColorHint="#666666" />
+                    </LinearLayout>
+
+                    <!-- Shader -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Shader OpenGL (.glsl/.glslp):"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+
+                        <EditText
+                            android:id="@+id/et_shader"
+                            android:layout_width="160dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:singleLine="true"
+                            android:hint="caminho/shader.glsl"
+                            android:textColorHint="#666666" />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+            <!-- Panel 3: Áudio (Sound) -->
+            <ScrollView
+                android:id="@+id/panel_sound"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Configurações de Áudio e Som [Sound]"
+                        android:textColor="#FFD700"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_enable_audio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="EnableAudio: Ativar Áudio do Jogo"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Audio Frequency -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Frequência de Áudio (AudioFreq):"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+
+                        <Spinner
+                            android:id="@+id/sp_audio_freq"
+                            android:layout_width="160dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Audio Samples / Buffer -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Tamanho do Buffer de Som (AudioSamples):"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+
+                        <Spinner
+                            android:id="@+id/sp_audio_samples"
+                            android:layout_width="160dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- Audio Channels -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Canais de Áudio (AudioChannels):"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+
+                        <Spinner
+                            android:id="@+id/sp_audio_channels"
+                            android:layout_width="160dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <!-- MSU Audio Support -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Áudio Orquestrado MSU-1 (EnableMSU):"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+
+                        <Spinner
+                            android:id="@+id/sp_enable_msu"
+                            android:layout_width="160dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/edit_text_bg" />
+                    </LinearLayout>
+
+                    <CheckBox
+                        android:id="@+id/cb_resume_msu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ResumeMSU: Lembrar posição da trilha MSU ao trocar de área"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <!-- MSU Volume -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/tv_msu_volume_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Volume da Trilha MSU: 100%"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+
+                        <SeekBar
+                            android:id="@+id/sb_msu_volume"
+                            android:layout_width="160dp"
+                            android:layout_height="wrap_content"
+                            android:max="100"
+                            android:progress="100" />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+            <!-- Panel 4: Gameplay (Features) -->
+            <ScrollView
+                android:id="@+id/panel_features"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Melhorias de Jogabilidade &amp; Recursos [Features]"
+                        android:textColor="#FFD700"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_switch_lr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ItemSwitchLR: Trocar itens rápidos com botões L / R"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_item_switch_limit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ItemSwitchLRLimit: Limitar troca rápida apenas aos 4 primeiros itens"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_turn_while_dashing"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TurnWhileDashing: Poder virar de direção durante a corrida (Pegasus Boots)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_mirror_darkworld"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="MirrorToDarkworld: Permitir usar o Magic Mirror para voltar ao Dark World"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_collect_with_sword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="CollectItemsWithSword: Coletar corações/itens golpeando com a espada"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_break_pots"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="BreakPotsWithSword: Quebrar potes com espada (Espada Nível 2 a 4)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_disable_low_health_beep"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="DisableLowHealthBeep: Desativar bipe estridente de vida baixa"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_skip_intro"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="SkipIntroOnKeypress: Pular introdução da Triforce/História ao apertar botão"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_show_max_yellow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ShowMaxItemsInYellow: Exibir contador de Rupees/Bombas/Flechas cheias em amarelo"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_more_active_bombs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="MoreActiveBombs: Permitir até 4 bombas ativas ao mesmo tempo (padrão é 2)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_carry_more_rupees"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="CarryMoreRupees: Carteira para carregar até 9999 Rupees (padrão 999)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_misc_bug_fixes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="MiscBugFixes: Ativar correções de bugs gráficos e glitches do original"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_game_changing_bug_fixes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="GameChangingBugFixes: Correções avançadas de glitches de gameplay"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb_cancel_bird_travel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="CancelBirdTravel: Cancelar voo da Flauta/Pássaro ao apertar X"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+                </LinearLayout>
+            </ScrollView>
+
+            <!-- Panel 5: Editor Direto (.ini) -->
+            <LinearLayout
+                android:id="@+id/panel_raw_ini"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:text="Editor Manual de Texto do zelda3.ini"
+                        android:textColor="#FFD700"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_reload_raw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/btn_dark"
+                        android:text="Recarregar Arquivo"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp" />
+                </RelativeLayout>
+
+                <EditText
+                    android:id="@+id/et_raw_ini"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edit_text_bg"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:gravity="top|left"
+                    android:padding="8dp"
+                    android:inputType="textMultiLine|textNoSuggestions"
+                    android:scrollbars="vertical"
+                    android:typeface="monospace" />
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

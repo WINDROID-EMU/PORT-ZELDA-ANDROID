@@ -334,6 +334,8 @@ int main(int argc, char** argv) {
     return 1;
   }
 
+  SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+
   bool custom_size  = g_config.window_width != 0 && g_config.window_height != 0;
   int window_width  = custom_size ? g_config.window_width  : g_current_window_scale * g_snes_width;
   int window_height = custom_size ? g_config.window_height : g_current_window_scale * g_snes_height;
@@ -796,7 +798,7 @@ static bool ParseLinkGraphics(uint8 *file, size_t length) {
 }
 
 static void LoadLinkGraphics() {
-  if (g_config.link_graphics) {
+  if (g_config.link_graphics && *g_config.link_graphics) {
     fprintf(stderr, "Loading Link Graphics: %s\n", g_config.link_graphics);
     size_t length = 0;
     uint8 *file = ReadWholeFile(g_config.link_graphics, &length);

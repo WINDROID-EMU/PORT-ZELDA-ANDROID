@@ -20,15 +20,56 @@ import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.KeyEvent;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.view.View;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
+import android.os.Vibrator;
+import android.graphics.RectF;
 
 //This class is the main SDLActivity and just sets up a bunch of default files
 public class MainActivity extends SDLActivity {
+
+    @Override
+    public void setOrientationBis(int w, int h, boolean resizable, String hint) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+    }
 
     private class VirtualGamepadView extends View {
         private Paint strokePaint;
         private Paint fillPaint;
         private Paint textPaint;
+        private Paint progressPaint;
+
+        private final Handler mHandler = new Handler(Looper.getMainLooper());
+        private static final long LONG_PRESS_DURATION_MS = 200;
+        private long togglePressStartTime = 0;
+        private boolean isToggleLongPressTriggered = false;
+        private int togglePointerId = -1;
+        private final RectF toggleProgressRect = new RectF();
+
+        private final Runnable longPressRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (toggleButton != null && toggleButton.pressed) {
+                    isToggleLongPressTriggered = true;
+                    toggleButton.pressed = false;
+                    togglePointerId = -1;
+                    invalidate();
+
+                    try {
+                        Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                        if (v != null && v.hasVibrator()) {
+                            v.vibrate(60);
+                        }
+                    } catch (Exception ignored) {}
+
+                    Intent intent = new Intent(getContext(), ConfigActivity.class);
+                    getContext().startActivity(intent);
+                }
+            }
+        };
 
         public VirtualGamepadView(Context context) {
             super(context);
@@ -52,6 +93,13 @@ public class MainActivity extends SDLActivity {
             textPaint.setTextAlign(Paint.Align.CENTER);
             textPaint.setFakeBoldText(true);
             textPaint.setAntiAlias(true);
+
+            progressPaint = new Paint();
+            progressPaint.setColor(0xFFFFD700); // Gold progress ring
+            progressPaint.setStyle(Paint.Style.STROKE);
+            progressPaint.setStrokeWidth(8f);
+            progressPaint.setAntiAlias(true);
+            progressPaint.setStrokeCap(Paint.Cap.ROUND);
         }
 
         class ButtonDef {
@@ -122,7 +170,29 @@ public class MainActivity extends SDLActivity {
             if (buttons == null || toggleButton == null) return;
             
             // Draw toggle button
-            if (toggleButton.pressed) canvas.drawCircle(toggleButton.x, toggleButton.y, toggleButton.rx, fillPaint);
+            if (toggleButton.pressed) {
+                canvas.drawCircle(toggleButton.x, toggleButton.y, toggleButton.rx, fillPaint);
+
+                // Draw progress arc around the button
+                long elapsed = SystemClock.uptimeMillis() - togglePressStartTime;
+                float progress = Math.min(1.0f, (float) elapsed / (float) LONG_PRESS_DURATION_MS);
+                float sweepAngle = progress * 360f;
+
+                float ringPadding = toggleButton.rx * 0.4f;
+                toggleProgressRect.set(
+                        toggleButton.x - toggleButton.rx - ringPadding,
+                        toggleButton.y - toggleButton.rx - ringPadding,
+                        toggleButton.x + toggleButton.rx + ringPadding,
+                        toggleButton.y + toggleButton.rx + ringPadding
+                );
+
+                progressPaint.setStrokeWidth(toggleButton.rx * 0.25f);
+                canvas.drawArc(toggleProgressRect, -90f, sweepAngle, false, progressPaint);
+
+                if (progress < 1.0f) {
+                    postInvalidateDelayed(16);
+                }
+            }
             canvas.drawCircle(toggleButton.x, toggleButton.y, toggleButton.rx, strokePaint);
             float oldSizeToggle = textPaint.getTextSize();
             textPaint.setTextSize(oldSizeToggle * 0.6f);
@@ -182,7 +252,7 @@ public class MainActivity extends SDLActivity {
             if (toggleButton != null) {
                 float tx = x - toggleButton.x;
                 float ty = y - toggleButton.y;
-                if (tx * tx + ty * ty <= (toggleButton.rx * 1.8f) * (toggleButton.rx * 1.8f)) {
+                if (tx * tx + ty * ty <= (toggleButton.rx * 2.0f) * (toggleButton.rx * 2.0f)) {
                     return true;
                 }
             }
@@ -210,7 +280,6 @@ public class MainActivity extends SDLActivity {
             if (buttons == null || toggleButton == null) return true;
             
             boolean[] nextState = new boolean[buttons.length];
-            boolean toggleNextState = false;
             
             boolean analogActive = false;
             float currentFingerX = 0;
@@ -221,17 +290,70 @@ public class MainActivity extends SDLActivity {
             int actionIndex = event.getActionIndex();
             int actionId = event.getPointerId(actionIndex);
 
-            // Handle touch down for floating analog
-            if (controlsVisible && (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN)) {
+            // Handle touch down on toggle button
+            if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
                 float tx = event.getX(actionIndex);
                 float ty = event.getY(actionIndex);
-                // Left half of screen, below the L button, and not over any button
-                if (tx < getWidth() / 2f && ty > getHeight() * 0.35f && !isTouchOverButton(tx, ty)) {
-                    if (analogPointerId == -1) {
-                        analogPointerId = actionId;
-                        currentDpadX = tx;
-                        currentDpadY = ty;
+                float dtx = tx - toggleButton.x;
+                float dty = ty - toggleButton.y;
+                if (dtx * dtx + dty * dty <= (toggleButton.rx * 2.0f) * (toggleButton.rx * 2.0f)) {
+                    if (togglePointerId == -1) {
+                        togglePointerId = actionId;
+                        toggleButton.pressed = true;
+                        isToggleLongPressTriggered = false;
+                        togglePressStartTime = SystemClock.uptimeMillis();
+                        mHandler.removeCallbacks(longPressRunnable);
+                        mHandler.postDelayed(longPressRunnable, LONG_PRESS_DURATION_MS);
                         invalidate();
+                    }
+                }
+            }
+
+            // Handle touch up / cancel on toggle button
+            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) {
+                if (actionId == togglePointerId) {
+                    mHandler.removeCallbacks(longPressRunnable);
+                    if (!isToggleLongPressTriggered && toggleButton.pressed) {
+                        controlsVisible = !controlsVisible;
+                    }
+                    toggleButton.pressed = false;
+                    togglePointerId = -1;
+                    isToggleLongPressTriggered = false;
+                    invalidate();
+                }
+            }
+
+            // Handle movement on toggle button (cancel if dragged away)
+            if (action == MotionEvent.ACTION_MOVE && togglePointerId != -1) {
+                int pIdx = event.findPointerIndex(togglePointerId);
+                if (pIdx != -1) {
+                    float px = event.getX(pIdx);
+                    float py = event.getY(pIdx);
+                    float dpx = px - toggleButton.x;
+                    float dpy = py - toggleButton.y;
+                    if (dpx * dpx + dpy * dpy > (toggleButton.rx * 2.5f) * (toggleButton.rx * 2.5f)) {
+                        mHandler.removeCallbacks(longPressRunnable);
+                        toggleButton.pressed = false;
+                        togglePointerId = -1;
+                        isToggleLongPressTriggered = false;
+                        invalidate();
+                    }
+                }
+            }
+
+            // Handle touch down for floating analog
+            if (controlsVisible && (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN)) {
+                if (actionId != togglePointerId) {
+                    float tx = event.getX(actionIndex);
+                    float ty = event.getY(actionIndex);
+                    // Left half of screen, below the L button, and not over any button
+                    if (tx < getWidth() / 2f && ty > getHeight() * 0.35f && !isTouchOverButton(tx, ty)) {
+                        if (analogPointerId == -1) {
+                            analogPointerId = actionId;
+                            currentDpadX = tx;
+                            currentDpadY = ty;
+                            invalidate();
+                        }
                     }
                 }
             }
@@ -252,19 +374,14 @@ public class MainActivity extends SDLActivity {
                     if (actionIndex == i) continue;
                 }
                 
+                int id = event.getPointerId(i);
+                if (id == togglePointerId) continue;
+                
                 float x = event.getX(i);
                 float y = event.getY(i);
                 
-                // Check toggleButton
-                float tx = x - toggleButton.x;
-                float ty = y - toggleButton.y;
-                if (tx*tx + ty*ty <= (toggleButton.rx*1.8f)*(toggleButton.rx*1.8f)) {
-                    toggleNextState = true;
-                }
-                
                 if (controlsVisible) {
                     // Check Analog Stick
-                    int id = event.getPointerId(i);
                     if (id == analogPointerId) {
                         float dx = x - currentDpadX;
                         float dy = y - currentDpadY;
@@ -309,14 +426,6 @@ public class MainActivity extends SDLActivity {
                 analogPressed = false;
             }
             
-            if (toggleButton.pressed != toggleNextState) {
-                toggleButton.pressed = toggleNextState;
-                changed = true;
-                if (toggleNextState) { // Trigger toggle on press down
-                    controlsVisible = !controlsVisible;
-                }
-            }
-            
             for (int i=0; i<buttons.length; i++) {
                 if (buttons[i].pressed != nextState[i]) {
                     buttons[i].pressed = nextState[i];
@@ -334,16 +443,19 @@ public class MainActivity extends SDLActivity {
 
     @Override
     public File getExternalFilesDir(String type) {
-        File dir = new File(Environment.getExternalStorageDirectory(), "zelda");
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        return dir;
+        try {
+            File dir = new File(Environment.getExternalStorageDirectory(), "zelda");
+            if (dir.exists() || dir.mkdirs()) {
+                return dir;
+            }
+        } catch (Exception ignored) {}
+        return super.getExternalFilesDir(type);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
         if (mLayout != null) {
             VirtualGamepadView gamepad = new VirtualGamepadView(this);

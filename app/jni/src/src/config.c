@@ -367,7 +367,7 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
     } else if (StringEqualsNoCase(key, "NoSpriteLimits")) {
       return ParseBool(value, &g_config.no_sprite_limits);
     } else if (StringEqualsNoCase(key, "LinkGraphics")) {
-      g_config.link_graphics = value;
+      g_config.link_graphics = *value ? value : NULL;
       return true;
     } else if (StringEqualsNoCase(key, "Shader")) {
       g_config.shader = *value ? value : NULL;
@@ -449,7 +449,7 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
     } else if (StringEqualsNoCase(key, "DisableFrameDelay")) {
       return ParseBool(value, &g_config.disable_frame_delay);
     } else if (StringEqualsNoCase(key, "Language")) {
-      g_config.language = value;
+      g_config.language = *value ? value : NULL;
       return true;
     }
   } else if (section == 4) {
