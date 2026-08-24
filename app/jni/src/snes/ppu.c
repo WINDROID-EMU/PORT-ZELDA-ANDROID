@@ -269,6 +269,19 @@ static void PpuWindows_Calc(PpuWindows *win, Ppu *ppu, uint layer) {
   win->bits = w1_bits | w2_bits;
 }
 
+static inline uint32 PpuFetchTile(Ppu *ppu, uint layer, const uint16 *const tps[2], int cur_screen_x, int world_x, int world_y, uint x) {
+  if (layer == 1 && ppu->extraOverworldTiles != NULL && (cur_screen_x < 0 || cur_screen_x >= 256)) {
+    if (world_x < 0) world_x = 0;
+    else if (world_x >= 4096) world_x = 4095;
+    if (world_y < 0) world_y = 0;
+    else if (world_y >= 4096) world_y = 4095;
+    int tx = (world_x >> 3) & 511;
+    int ty = (world_y >> 3) & 511;
+    return ppu->extraOverworldTiles[ty * 512 + tx];
+  }
+  return tps[(x >> 8) & 1][(x >> 3) & 0x1f];
+}
+
 // Draw a whole line of a 4bpp background layer into bgBuffers
 static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZbufType zhi, PpuZbufType zlo) {
 #define DO_PIXEL(i) do { \
@@ -284,6 +297,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
   PpuWindows win;
   IS_SCREEN_WINDOWED(ppu, sub, layer) ? PpuWindows_Calc(&win, ppu, layer) : PpuWindows_Clear(&win, ppu, layer);
   BgLayer *bglayer = &ppu->bgLayer[layer];
+  int world_y = (int)ppu->extraOverworldWorldY + (int)y;
   y += bglayer->vScroll;
   int sc_offs = bglayer->tilemapAdr + (((y >> 3) & 0x1f) << 5);
   if ((y & 0x100) && bglayer->tilemapHigher)
@@ -298,29 +312,31 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
   for (size_t windex = 0; windex < win.nr; windex++) {
     if (win.bits & (1 << windex))
       continue;  // layer is disabled for this window part
+    int cur_screen_x = (int)win.edges[windex];
     uint x = win.edges[windex] + bglayer->hScroll;
+    int world_x = cur_screen_x + (int)ppu->extraOverworldWorldX;
     uint w = win.edges[windex + 1] - win.edges[windex];
     PpuZbufType *dstz = ppu->bgBuffers[sub].data + win.edges[windex] + kPpuExtraLeftRight;
-    const uint16 *tp = tps[x >> 8 & 1] + ((x >> 3) & 0x1f);
-    const uint16 *tp_last = tps[x >> 8 & 1] + 31;
-    const uint16 *tp_next = tps[(x >> 8 & 1) ^ 1];
-#define NEXT_TP() if (tp != tp_last) tp += 1; else tp = tp_next, tp_next = tp_last - 31, tp_last = tp + 31;
+
     // Handle clipped pixels on left side
     if (x & 7) {
       int curw = IntMin(8 - (x & 7), w);
+      int sub_x = x & 7;
       w -= curw;
-      uint32 tile = *tp;
-      NEXT_TP();
+      uint32 tile = PpuFetchTile(ppu, layer, tps, cur_screen_x, world_x, world_y, x);
+      cur_screen_x += curw;
+      world_x += curw;
+      x += curw;
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
       uint32 bits = READ_BITS(ta, tile & 0x3ff);
       if (bits) {
         z += ((tile & 0x1c00) >> kPaletteShift);
         if (tile & 0x4000) {
-          bits >>= (x & 7), x += curw;
+          bits >>= sub_x;
           do DO_PIXEL(0); while (bits >>= 1, dstz++, --curw);
         } else {
-          bits <<= (x & 7), x += curw;
+          bits <<= sub_x;
           do DO_PIXEL_HFLIP(0); while (bits <<= 1, dstz++, --curw);
         }
       } else {
@@ -329,8 +345,10 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
     }
     // Handle full tiles in the middle
     while (w >= 8) {
-      uint32 tile = *tp;
-      NEXT_TP();
+      uint32 tile = PpuFetchTile(ppu, layer, tps, cur_screen_x, world_x, world_y, x);
+      cur_screen_x += 8;
+      world_x += 8;
+      x += 8;
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
       uint32 bits = READ_BITS(ta, tile & 0x3ff);
@@ -348,7 +366,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
     }
     // Handle remaining clipped part
     if (w) {
-      uint32 tile = *tp;
+      uint32 tile = PpuFetchTile(ppu, layer, tps, cur_screen_x, world_x, world_y, x);
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
       uint32 bits = READ_BITS(ta, tile & 0x3ff);
@@ -696,6 +714,13 @@ void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int bottom) {
   ppu->extraLeftCur = UintMin(left, ppu->extraLeftRight);
   ppu->extraRightCur = UintMin(right, ppu->extraLeftRight);
   ppu->extraBottomCur = UintMin(bottom, 16);
+}
+
+void PpuSetExtraOverworldMap(Ppu *ppu, const uint16_t *tiles, int world_x, int world_y, int area_x) {
+  ppu->extraOverworldTiles = tiles;
+  ppu->extraOverworldWorldX = world_x;
+  ppu->extraOverworldWorldY = world_y;
+  ppu->extraOverworldAreaX = area_x;
 }
 
 static FORCEINLINE float FloatInterpolate(float x, float xmin, float xmax, float ymin, float ymax) {

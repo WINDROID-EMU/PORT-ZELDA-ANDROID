@@ -11,6 +11,7 @@
 #include "player_oam.h"
 #include "snes/snes_regs.h"
 #include "assets.h"
+#include "overworld_seamless.h"
 
 const uint16 kOverworld_OffsetBaseX[64] = {
   0,     0, 0x400, 0x600, 0x600, 0xa00, 0xa00, 0xe00,
@@ -85,7 +86,7 @@ static PlayerHandlerFunc *const kOverworld_EntranceSequence[5] = {
 #define map16_decode_last (*(uint16*)(g_ram+0x14440))
 #define map16_decode_tmp (*(uint16*)(g_ram+0x14442))
 #endif
-static const uint16 kSecondaryOverlayPerOw[128] = {
+const uint16 kSecondaryOverlayPerOw[128] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0x1c0c, 0x1c0c, 0, 0, 0, 0, 0, 0, 0x1c0c, 0x1c0c, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0x3b0, 0x180c, 0x180c, 0x288, 0, 0, 0, 0, 0, 0x180c, 0x180c, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -1718,6 +1719,7 @@ void Overworld_FinalizeEntryOntoScreen() {  // 82c242
   if ((d & 0xfe) == kOverworld_Func8_tab[byte_7E069C]) {
     submodule_index = 0;
     subsubmodule_index = 0;
+    Overworld_RestoreCleanWorldMap(savegame_is_darkworld ? 1 : 0);
     uint8 m = overworld_music[BYTE(overworld_screen_index)];
     sound_effect_ambient = m >> 4;
     if (music_unk1 == 0xf1)
@@ -2087,6 +2089,7 @@ void Overworld_DrawQuadrantsAndOverlays() {  // 82eec5
     ow_entrance_value = 0;
   }
   Overworld_HandleOverlaysAndBombDoors();
+  Overworld_RestoreCleanWorldMap(savegame_is_darkworld ? 1 : 0);
 }
 
 void Overworld_HandleOverlaysAndBombDoors() {  // 82ef29
@@ -2725,6 +2728,14 @@ getout:
 }
 
 void Overworld_Memorize_Map16_Change(uint16 pos, uint16 value) {  // 8edd40
+  int local_col = (pos >> 1) & 63;
+  int local_row = (pos >> 1) >> 6;
+  int area = BYTE(current_area_of_player) >> 1;
+  int world_x = kOverworld_OffsetBaseX[area] + local_col * 16;
+  int world_y = kOverworld_OffsetBaseY[area] + local_row * 16;
+  uint8 world = savegame_is_darkworld ? 1 : 0;
+  Overworld_UpdateGlobalMap16(world, world_x, world_y, value);
+
   if (value == 0xdc5 || value == 0xdc9)
     return;
 
@@ -3602,6 +3613,14 @@ void AdjustSecretForPowder() {  // 9bc943
 void Overworld_DrawMap16_Persist(uint16 pos, uint16 value) {  // 9bc97c
   dung_bg2[pos >> 1] = value;
   Overworld_DrawMap16(pos, value);
+
+  int local_col = (pos >> 1) & 63;
+  int local_row = (pos >> 1) >> 6;
+  int area = BYTE(current_area_of_player) >> 1;
+  int world_x = kOverworld_OffsetBaseX[area] + local_col * 16;
+  int world_y = kOverworld_OffsetBaseY[area] + local_row * 16;
+  uint8 world = savegame_is_darkworld ? 1 : 0;
+  Overworld_UpdateGlobalMap16(world, world_x, world_y, value);
 }
 
 void Overworld_DrawMap16(uint16 pos, uint16 value) {  // 9bc980
@@ -3635,6 +3654,14 @@ void Overworld_AlterTileHardcore(uint16 pos, uint16 value) {  // 9bc9de
   dst[7] = src[3];
   dst[8] = 0xffff;
   vram_upload_offset += 16;
+
+  int local_col = (pos >> 1) & 63;
+  int local_row = (pos >> 1) >> 6;
+  int area = BYTE(current_area_of_player) >> 1;
+  int world_x = kOverworld_OffsetBaseX[area] + local_col * 16;
+  int world_y = kOverworld_OffsetBaseY[area] + local_row * 16;
+  uint8 world = savegame_is_darkworld ? 1 : 0;
+  Overworld_UpdateGlobalMap16(world, world_x, world_y, value);
 }
 
 uint16 Overworld_FindMap16VRAMAddress(uint16 addr) {  // 9bca69

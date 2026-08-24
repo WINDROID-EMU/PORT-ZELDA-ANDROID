@@ -13,6 +13,7 @@
 #include "audio.h"
 #include "assets.h"
 #include "android_logging.h"
+#include "overworld_seamless.h"
 /*
  * The saving functions have been rewritten in this file to support saving to external storage on android.
  */
@@ -155,25 +156,33 @@ static void ConfigurePpuSideSpace() {
       // World map
       extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
       extra_bottom = 16;
+      PpuSetExtraOverworldMap(g_zenv.ppu, NULL, 0, 0, 0);
     } else {
-      // outdoors
-      extra_left = BG2HOFS_copy2 - ow_scroll_vars0.xstart;
-      extra_right = ow_scroll_vars0.xend - BG2HOFS_copy2;
-      extra_bottom = ow_scroll_vars0.yend - BG2VOFS_copy2;
-    }
-  } else if (mod == 7) {
-    // indoors, except when the light cone is in use
-    if (!(hdr_dungeon_dark_with_lantern && TS_copy != 0)) {
-      int qm = quadrant_fullsize_x >> 1;
-      extra_left = IntMax(BG2HOFS_copy2 - room_bounds_x.v[qm], 0);
-      extra_right = IntMax(room_bounds_x.v[qm + 2] - BG2HOFS_copy2, 0);
-    }
+      // outdoors - seamless widescreen overworld with preloaded adjacent map!
+      extra_left = kPpuExtraLeftRight;
+      extra_right = kPpuExtraLeftRight;
+      extra_bottom = 16;
 
-    int qy = quadrant_fullsize_y >> 1;
-    extra_bottom = IntMax(room_bounds_y.v[qy + 2] - BG2VOFS_copy2, 0);
-  } else if (mod == 20 || mod == 0 || mod == 1) {
-    extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
-    extra_bottom = 16;
+      uint8 world = savegame_is_darkworld ? 1 : 0;
+      const uint16 *global_tiles = Overworld_GetGlobalTilemap(world);
+      PpuSetExtraOverworldMap(g_zenv.ppu, global_tiles, (int)BG2HOFS_copy2, (int)BG2VOFS_copy2, (int)ow_scroll_vars0.xstart);
+    }
+  } else {
+    PpuSetExtraOverworldMap(g_zenv.ppu, NULL, 0, 0, 0);
+    if (mod == 7) {
+      // indoors, except when the light cone is in use
+      if (!(hdr_dungeon_dark_with_lantern && TS_copy != 0)) {
+        int qm = quadrant_fullsize_x >> 1;
+        extra_left = IntMax(BG2HOFS_copy2 - room_bounds_x.v[qm], 0);
+        extra_right = IntMax(room_bounds_x.v[qm + 2] - BG2HOFS_copy2, 0);
+      }
+
+      int qy = quadrant_fullsize_y >> 1;
+      extra_bottom = IntMax(room_bounds_y.v[qy + 2] - BG2VOFS_copy2, 0);
+    } else if (mod == 20 || mod == 0 || mod == 1) {
+      extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
+      extra_bottom = 16;
+    }
   }
   PpuSetExtraSideSpace(g_zenv.ppu, extra_left, extra_right, extra_bottom);
 }

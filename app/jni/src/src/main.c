@@ -27,6 +27,7 @@
 #include "util.h"
 #include "audio.h"
 #include "android_logging.h"
+#include "overworld_seamless.h"
 
 static bool g_run_without_emu = 0;
 
@@ -420,6 +421,7 @@ int main(int argc, char** argv) {
   LoadLinkGraphics();
 
   ZeldaInitialize();
+  Overworld_InitGlobalWorldMap();
   g_zenv.ppu->extraLeftRight = UintMin(g_config.extended_aspect_ratio, kPpuExtraLeftRight);
   g_snes_width = (g_config.extended_aspect_ratio * 2 + 256);
   g_snes_height = (g_config.extend_y ? 240 : 224);
