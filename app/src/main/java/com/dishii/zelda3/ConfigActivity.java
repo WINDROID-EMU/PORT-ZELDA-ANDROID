@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -41,7 +42,7 @@ public class ConfigActivity extends Activity {
     private Button btnSave, btnClose, btnRestoreDefaults, btnReloadRaw;
 
     // Features & Item Editor
-    private Button btnOpenItemEditor;
+    private Button btnOpenItemEditor, btnDownloadSprites;
 
     // General controls
     private Spinner spAspectRatio, spLanguage;
@@ -149,6 +150,21 @@ public class ConfigActivity extends Activity {
         selectTab(tabGeneral, panelGeneral);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Reload config from disk so that changes made by SpriteDownloaderActivity
+        // (or any other external tool) are reflected in the UI immediately.
+        if (configHelper != null && etLinkGraphics != null) {
+            configHelper.load();
+            String linkGfx = configHelper.getValue("Graphics", "LinkGraphics", "");
+            // Only update the field if not currently focused (user might be typing)
+            if (!etLinkGraphics.isFocused()) {
+                etLinkGraphics.setText(linkGfx);
+            }
+        }
+    }
+
     private void initViews() {
         tabGeneral = findViewById(R.id.tab_general);
         tabGraphics = findViewById(R.id.tab_graphics);
@@ -184,6 +200,7 @@ public class ConfigActivity extends Activity {
         cbIgnoreAspectRatio = findViewById(R.id.cb_ignore_aspect_ratio);
         cbDimFlashes = findViewById(R.id.cb_dim_flashes);
         etLinkGraphics = findViewById(R.id.et_link_graphics);
+        btnDownloadSprites = findViewById(R.id.btn_download_sprites);
         
         // Shaders & Filters
         cbEnableShader = findViewById(R.id.cb_enable_shader);
@@ -615,6 +632,16 @@ public class ConfigActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     showItemEditorDialog();
+                }
+            });
+        }
+
+        if (btnDownloadSprites != null) {
+            btnDownloadSprites.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ConfigActivity.this, SpriteDownloaderActivity.class);
+                    startActivity(intent);
                 }
             });
         }

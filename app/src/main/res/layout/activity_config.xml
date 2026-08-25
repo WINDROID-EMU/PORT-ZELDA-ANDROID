@@ -430,7 +430,19 @@
                             android:paddingRight="8dp"
                             android:singleLine="true"
                             android:hint="caminho/para.zspr"
-                            android:textColorHint="#666666" />
+                            android:textColorHint="#666666"
+                            android:layout_marginRight="8dp" />
+
+                        <Button
+                            android:id="@+id/btn_download_sprites"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:background="@drawable/btn_gold"
+                            android:text="🎨 Selecionar Sprite"
+                            android:textColor="#1A1500"
+                            android:textSize="11sp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp" />
                     </LinearLayout>
 
                     <!-- Filtros Gráficos e Shaders (Nitidez e Qualidade Visual) -->
