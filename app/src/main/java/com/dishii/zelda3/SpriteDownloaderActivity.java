@@ -50,7 +50,18 @@ public class SpriteDownloaderActivity extends Activity {
     private List<SpriteItem> spriteItems = new ArrayList<>();
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        ZeldaConfigHelper helper = new ZeldaConfigHelper(newBase);
+        String lang = helper.getValue("General", "Language", "");
+        super.attachBaseContext(LocaleHelper.applyLocale(newBase, lang));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ZeldaConfigHelper helper = new ZeldaConfigHelper(this);
+        String currentLang = helper.getValue("General", "Language", "");
+        LocaleHelper.updateResources(this, currentLang);
+
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         setContentView(R.layout.activity_sprite_downloader);
@@ -109,7 +120,7 @@ public class SpriteDownloaderActivity extends Activity {
                             spriteItems = finalSprites;
                             displaySprites();
                         } else {
-                            Toast.makeText(SpriteDownloaderActivity.this, "Nenhum sprite encontrado nos assets.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(SpriteDownloaderActivity.this, R.string.sprite_toast_none_found, Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -173,7 +184,7 @@ public class SpriteDownloaderActivity extends Activity {
 
         // Select button
         Button selectButton = new Button(this);
-        selectButton.setText("Selecionar");
+        selectButton.setText(R.string.sprite_select);
         selectButton.setTextSize(11);
         selectButton.setPadding(12, 8, 12, 8);
         selectButton.setOnClickListener(new View.OnClickListener() {
@@ -273,15 +284,15 @@ public class SpriteDownloaderActivity extends Activity {
 
     private void selectSprite(final SpriteItem sprite) {
         new AlertDialog.Builder(this)
-                .setTitle("Selecionar Sprite")
-                .setMessage("Deseja selecionar \"" + sprite.displayName + "\" como sprite do Link?")
-                .setPositiveButton("Sim", new android.content.DialogInterface.OnClickListener() {
+                .setTitle(R.string.sprite_dialog_title)
+                .setMessage(getString(R.string.sprite_dialog_message, sprite.displayName))
+                .setPositiveButton(R.string.sprite_yes, new android.content.DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(android.content.DialogInterface dialog, int which) {
                         updateConfigWithSprite(sprite.name);
                         
                         Toast.makeText(SpriteDownloaderActivity.this, 
-                                "Sprite \"" + sprite.displayName + "\" selecionado com sucesso!", 
+                                getString(R.string.sprite_toast_selected, sprite.displayName), 
                                 Toast.LENGTH_SHORT).show();
                         
                         // Close the activity after a short delay
@@ -293,7 +304,7 @@ public class SpriteDownloaderActivity extends Activity {
                         }, 1500);
                     }
                 })
-                .setNegativeButton("Não", null)
+                .setNegativeButton(R.string.sprite_no, null)
                 .show();
     }
 
@@ -302,7 +313,7 @@ public class SpriteDownloaderActivity extends Activity {
             // Resolve the same root dir that MainActivity uses: /sdcard/zelda/
             File zeldaRootDir = getZeldaRootDir();
             if (zeldaRootDir == null) {
-                Toast.makeText(this, "Armazenamento externo indisponível.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.sprite_storage_unavailable, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -328,11 +339,11 @@ public class SpriteDownloaderActivity extends Activity {
             // Signal the running game to reload its config
             MainActivity.reloadGameConfig();
 
-            Toast.makeText(this, "Sprite configurado: " + spriteName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.sprite_toast_configured, spriteName), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             android.util.Log.e("SpriteDownloader", "Error configuring sprite", e);
             e.printStackTrace();
-            Toast.makeText(this, "Erro ao configurar sprite: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.sprite_toast_error, e.getMessage()), Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -9,7 +9,7 @@
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Selecionar Sprite do Link"
+        android:text="@string/sprite_title"
         android:textSize="24sp"
         android:textColor="#FFFFFFFF"
         android:textStyle="bold"
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/progress_bar"
         android:layout_centerHorizontal="true"
-        android:text="Carregando sprites..."
+        android:text="@string/sprite_loading"
         android:textColor="#FFFFFFFF"
         android:visibility="gone" />
 
@@ -57,7 +57,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:text="Fechar"
+        android:text="@string/sprite_close"
         android:textSize="16sp"
         android:padding="12dp"
         android:minWidth="200dp" />

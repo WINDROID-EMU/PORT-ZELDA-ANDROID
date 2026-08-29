@@ -26,7 +26,7 @@
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="⚙️ Configurações"
+                android:text="@string/config_title"
                 android:textColor="#FFC107"
                 android:textSize="17sp"
                 android:textStyle="bold" />
@@ -55,7 +55,7 @@
                 android:background="@drawable/btn_danger"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="Restaurar Padrão"
+                android:text="@string/btn_restore_defaults"
                 android:textColor="#FFFFFF"
                 android:textSize="11sp" />
 
@@ -67,7 +67,7 @@
                 android:background="@drawable/btn_gold"
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp"
-                android:text="💾 Salvar"
+                android:text="@string/btn_save"
                 android:textColor="#1A1500"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -79,7 +79,7 @@
                 android:background="@drawable/btn_dark"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
-                android:text="✕ Fechar"
+                android:text="@string/btn_close"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -115,7 +115,7 @@
                     android:id="@+id/tab_general"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:text="🌍 Geral"
+                    android:text="@string/tab_general"
                     android:textColor="#FFD700"
                     android:background="@drawable/btn_dark"
                     android:textSize="12sp"
@@ -127,7 +127,7 @@
                     android:id="@+id/tab_graphics"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:text="🖥️ Gráficos"
+                    android:text="@string/tab_graphics"
                     android:textColor="#B0C2DE"
                     android:background="@drawable/btn_dark"
                     android:textSize="12sp"
@@ -139,7 +139,7 @@
                     android:id="@+id/tab_sound"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:text="🔊 Áudio"
+                    android:text="@string/tab_sound"
                     android:textColor="#B0C2DE"
                     android:background="@drawable/btn_dark"
                     android:textSize="12sp"
@@ -151,7 +151,7 @@
                     android:id="@+id/tab_features"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:text="🎮 Gameplay"
+                    android:text="@string/tab_features"
                     android:textColor="#B0C2DE"
                     android:background="@drawable/btn_dark"
                     android:textSize="12sp"
@@ -167,7 +167,7 @@
                     android:background="@drawable/btn_dark"
                     android:gravity="left|center_vertical"
                     android:paddingLeft="8dp"
-                    android:text="📝 Editor .ini"
+                    android:text="@string/tab_raw_ini"
                     android:textColor="#B0C2DE"
                     android:textSize="12sp"
                     android:visibility="gone" />
@@ -198,7 +198,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Configurações Gerais [General]"
+                        android:text="@string/section_general_title"
                         android:textColor="#FFD700"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -216,7 +216,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Proporção de Tela Widescreen (ExtendedAspectRatio):"
+                            android:text="@string/label_aspect_ratio"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp" />
 
@@ -232,7 +232,7 @@
                         android:id="@+id/cb_autosave"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Autosave: Salvar estado ao sair e recarregar ao iniciar"
+                        android:text="@string/cb_autosave"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="8dp" />
@@ -242,7 +242,7 @@
                         android:id="@+id/cb_disable_frame_delay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Desativar atraso de quadros (DisableFrameDelay - para telas a 60Hz)"
+                        android:text="@string/cb_disable_frame_delay"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="8dp" />
@@ -252,7 +252,7 @@
                         android:id="@+id/cb_display_perf"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Exibir desempenho de FPS no título (DisplayPerfInTitle)"
+                        android:text="@string/cb_display_perf"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="8dp" />
@@ -269,7 +269,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Idioma dos Diálogos (Language):"
+                            android:text="@string/label_dialogue_language"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp" />
 
@@ -297,7 +297,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Configurações de Vídeo e Gráficos [Graphics]"
+                        android:text="@string/section_graphics_title"
                         android:textColor="#FFD700"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -315,7 +315,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Método de Saída Gráfica (OutputMethod):"
+                            android:text="@string/label_output_method"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp" />
 
@@ -338,7 +338,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Escala de Renderização (WindowScale):"
+                            android:text="@string/label_window_scale"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp" />
 
@@ -353,7 +353,7 @@
                         android:id="@+id/cb_new_renderer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="NewRenderer: PPU SNES Otimizado"
+                        android:text="@string/cb_new_renderer"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -362,7 +362,7 @@
                         android:id="@+id/cb_enhanced_mode7"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="EnhancedMode7: Mapa do mundo em alta resolução"
+                        android:text="@string/cb_enhanced_mode7"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -371,7 +371,7 @@
                         android:id="@+id/cb_no_sprite_limits"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="NoSpriteLimits: Remove limite de sprites por scanline (sem flicker)"
+                        android:text="@string/cb_no_sprite_limits"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -380,7 +380,7 @@
                         android:id="@+id/cb_linear_filtering"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="LinearFiltering: Filtro suave / bilinear"
+                        android:text="@string/cb_linear_filtering"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -389,7 +389,7 @@
                         android:id="@+id/cb_ignore_aspect_ratio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="IgnoreAspectRatio: Esticar imagem para tela cheia"
+                        android:text="@string/cb_ignore_aspect_ratio"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -398,7 +398,7 @@
                         android:id="@+id/cb_dim_flashes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="DimFlashes: Reduzir clarões e efeitos de flash intenso (Virtual Console)"
+                        android:text="@string/cb_dim_flashes"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="8dp" />
@@ -415,7 +415,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Sprite Customizado do Link (LinkGraphics .zspr):"
+                            android:text="@string/label_link_graphics"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp" />
 
@@ -429,7 +429,7 @@
                             android:paddingLeft="8dp"
                             android:paddingRight="8dp"
                             android:singleLine="true"
-                            android:hint="caminho/para.zspr"
+                            android:hint="@string/hint_link_graphics"
                             android:textColorHint="#666666"
                             android:layout_marginRight="8dp" />
 
@@ -438,7 +438,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
                             android:background="@drawable/btn_gold"
-                            android:text="🎨 Selecionar Sprite"
+                            android:text="@string/btn_download_sprites"
                             android:textColor="#1A1500"
                             android:textSize="11sp"
                             android:paddingLeft="10dp"
@@ -458,7 +458,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Filtros de Imagem e Nitidez (Shaders GLSL)"
+                            android:text="@string/section_shaders_title"
                             android:textColor="#FFD700"
                             android:textSize="13sp"
                             android:textStyle="bold"
@@ -469,7 +469,7 @@
                             android:id="@+id/cb_enable_shader"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Ativar Filtro de Imagem / Shader"
+                            android:text="@string/cb_enable_shader"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp"
                             android:layout_marginBottom="6dp" />
@@ -486,7 +486,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Filtro Pré-definido:"
+                                android:text="@string/label_shader_preset"
                                 android:textColor="#FFFFFF"
                                 android:textSize="12sp" />
 
@@ -502,7 +502,7 @@
                             android:id="@+id/tv_shader_desc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Selecione um filtro para melhorar a nitidez, cores ou adicionar efeitos retrô."
+                            android:text="@string/shader_desc_default"
                             android:textColor="#85A5C7"
                             android:textSize="11sp"
                             android:textStyle="italic"
@@ -520,7 +520,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Caminho do Arquivo Shader (.glsl):"
+                                android:text="@string/label_custom_shader"
                                 android:textColor="#FFFFFF"
                                 android:textSize="12sp" />
 
@@ -534,7 +534,7 @@
                                 android:paddingLeft="8dp"
                                 android:paddingRight="8dp"
                                 android:singleLine="true"
-                                android:hint="shaders/sharp_bilinear.glsl"
+                                android:hint="@string/hint_custom_shader"
                                 android:textColorHint="#666666" />
                         </LinearLayout>
                     </LinearLayout>
@@ -556,7 +556,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Configurações de Áudio e Som [Sound]"
+                        android:text="@string/section_sound_title"
                         android:textColor="#FFD700"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -566,7 +566,7 @@
                         android:id="@+id/cb_enable_audio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="EnableAudio: Ativar Áudio do Jogo"
+                        android:text="@string/cb_enable_audio"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="8dp" />
@@ -583,7 +583,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Frequência de Áudio (AudioFreq):"
+                            android:text="@string/label_audio_freq"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp" />
 
@@ -606,7 +606,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Tamanho do Buffer de Som (AudioSamples):"
+                            android:text="@string/label_audio_samples"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp" />
 
@@ -629,7 +629,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Canais de Áudio (AudioChannels):"
+                            android:text="@string/label_audio_channels"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp" />
 
@@ -652,7 +652,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Áudio Orquestrado MSU-1 (EnableMSU):"
+                            android:text="@string/label_enable_msu"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp" />
 
@@ -667,7 +667,7 @@
                         android:id="@+id/cb_resume_msu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="ResumeMSU: Lembrar posição da trilha MSU ao trocar de área"
+                        android:text="@string/cb_resume_msu"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -685,7 +685,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Volume da Trilha MSU: 100%"
+                            android:text="@string/label_msu_volume"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp" />
 
@@ -714,7 +714,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Melhorias de Jogabilidade &amp; Recursos [Features]"
+                        android:text="@string/section_features_title"
                         android:textColor="#FFD700"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -726,7 +726,7 @@
                         android:layout_height="42dp"
                         android:layout_marginBottom="12dp"
                         android:background="@drawable/btn_gold"
-                        android:text="🎒 Selecionar / Editar Itens do Inventário"
+                        android:text="@string/btn_open_item_editor"
                         android:textColor="#000000"
                         android:textSize="13sp"
                         android:textStyle="bold" />
@@ -735,7 +735,7 @@
                         android:id="@+id/cb_item_switch_lr"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="ItemSwitchLR: Trocar itens rápidos com botões L / R"
+                        android:text="@string/cb_item_switch_lr"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -744,7 +744,7 @@
                         android:id="@+id/cb_item_switch_limit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="ItemSwitchLRLimit: Limitar troca rápida apenas aos 4 primeiros itens"
+                        android:text="@string/cb_item_switch_limit"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -753,7 +753,7 @@
                         android:id="@+id/cb_turn_while_dashing"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TurnWhileDashing: Poder virar de direção durante a corrida (Pegasus Boots)"
+                        android:text="@string/cb_turn_while_dashing"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -762,7 +762,7 @@
                         android:id="@+id/cb_mirror_darkworld"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="MirrorToDarkworld: Permitir usar o Magic Mirror para voltar ao Dark World"
+                        android:text="@string/cb_mirror_darkworld"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -771,7 +771,7 @@
                         android:id="@+id/cb_collect_with_sword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="CollectItemsWithSword: Coletar corações/itens golpeando com a espada"
+                        android:text="@string/cb_collect_with_sword"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -780,7 +780,7 @@
                         android:id="@+id/cb_break_pots"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="BreakPotsWithSword: Quebrar potes com espada (Espada Nível 2 a 4)"
+                        android:text="@string/cb_break_pots"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -789,7 +789,7 @@
                         android:id="@+id/cb_disable_low_health_beep"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="DisableLowHealthBeep: Desativar bipe estridente de vida baixa"
+                        android:text="@string/cb_disable_low_health_beep"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -798,7 +798,7 @@
                         android:id="@+id/cb_skip_intro"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="SkipIntroOnKeypress: Pular introdução da Triforce/História ao apertar botão"
+                        android:text="@string/cb_skip_intro"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -807,7 +807,7 @@
                         android:id="@+id/cb_show_max_yellow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="ShowMaxItemsInYellow: Exibir contador de Rupees/Bombas/Flechas cheias em amarelo"
+                        android:text="@string/cb_show_max_yellow"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -816,7 +816,7 @@
                         android:id="@+id/cb_more_active_bombs"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="MoreActiveBombs: Permitir até 4 bombas ativas ao mesmo tempo (padrão é 2)"
+                        android:text="@string/cb_more_active_bombs"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -825,7 +825,7 @@
                         android:id="@+id/cb_carry_more_rupees"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="CarryMoreRupees: Carteira para carregar até 9999 Rupees (padrão 999)"
+                        android:text="@string/cb_carry_more_rupees"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -834,7 +834,7 @@
                         android:id="@+id/cb_misc_bug_fixes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="MiscBugFixes: Ativar correções de bugs gráficos e glitches do original"
+                        android:text="@string/cb_misc_bug_fixes"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -843,7 +843,7 @@
                         android:id="@+id/cb_game_changing_bug_fixes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="GameChangingBugFixes: Correções avançadas de glitches de gameplay"
+                        android:text="@string/cb_game_changing_bug_fixes"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -852,7 +852,7 @@
                         android:id="@+id/cb_cancel_bird_travel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="CancelBirdTravel: Cancelar voo da Flauta/Pássaro ao apertar X"
+                        android:text="@string/cb_cancel_bird_travel"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -861,7 +861,7 @@
                         android:id="@+id/cb_skip_dialogue_a"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="SkipDialogueOnHoldA: Pular diálogos segurando o botão A (3s)"
+                        android:text="@string/cb_skip_dialogue_a"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -870,7 +870,7 @@
                         android:id="@+id/cb_max_hearts"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="MaxHearts: Habilitar todos os 20 corações (Vida Máxima)"
+                        android:text="@string/cb_max_hearts"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         android:layout_marginBottom="6dp" />
@@ -895,7 +895,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:text="Editor Manual de Texto do zelda3.ini"
+                        android:text="@string/section_raw_ini_title"
                         android:textColor="#FFD700"
                         android:textSize="13sp"
                         android:textStyle="bold" />
@@ -906,7 +906,7 @@
                         android:layout_height="32dp"
                         android:layout_alignParentRight="true"
                         android:background="@drawable/btn_dark"
-                        android:text="Recarregar Arquivo"
+                        android:text="@string/btn_reload_raw"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp"
                         android:paddingLeft="10dp"

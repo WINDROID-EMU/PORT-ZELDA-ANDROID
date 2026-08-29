@@ -1,0 +1,113 @@
+<resources>
+    <string-array name="item_sword_list">
+        <item>0: Nenhuma Espada</item>
+        <item>1: Fighter\'s Sword (Nível 1)</item>
+        <item>2: Master Sword (Nível 2)</item>
+        <item>3: Tempered Sword (Nível 3)</item>
+        <item>4: Golden Sword (Nível 4)</item>
+    </string-array>
+
+    <string-array name="item_shield_list">
+        <item>0: Nenhum Escudo</item>
+        <item>1: Fighter\'s Shield (Nível 1)</item>
+        <item>2: Red Shield (Fogo - Nível 2)</item>
+        <item>3: Mirror Shield (Espelhado - Nível 3)</item>
+    </string-array>
+
+    <string-array name="item_armor_list">
+        <item>0: Green Mail (Túnica Verde - Normal)</item>
+        <item>1: Blue Mail (Túnica Azul - 1/2 Dano)</item>
+        <item>2: Red Mail (Túnica Vermelha - 1/4 Dano)</item>
+    </string-array>
+
+    <string-array name="item_gloves_list">
+        <item>0: Nenhuma Luva</item>
+        <item>1: Power Glove (Nível 1 - Pedras Claras)</item>
+        <item>2: Titan\'s Mitt (Nível 2 - Pedras Escuras)</item>
+    </string-array>
+
+    <string-array name="item_bow_list">
+        <item>0: Nenhum Arco</item>
+        <item>1: Bow (Arco de Madeira sem flechas)</item>
+        <item>2: Bow &amp; Arrows (Arco e Flechas Comuns)</item>
+        <item>3: Silver Bow (Arco de Prata sem flechas)</item>
+        <item>4: Silver Bow &amp; Arrows (Arco e Flechas de Prata)</item>
+    </string-array>
+
+    <string-array name="item_arrows_list">
+        <item>0 Flechas</item>
+        <item>10 Flechas</item>
+        <item>20 Flechas</item>
+        <item>30 Flechas</item>
+        <item>40 Flechas</item>
+        <item>50 Flechas</item>
+        <item>60 Flechas</item>
+        <item>70 Flechas</item>
+    </string-array>
+
+    <string-array name="item_boomerang_list">
+        <item>0: Nenhum Bumerangue</item>
+        <item>1: Blue Boomerang (Azul)</item>
+        <item>2: Magical Boomerang (Mágico Vermelho)</item>
+    </string-array>
+
+    <string-array name="item_mushroom_list">
+        <item>0: Nenhum</item>
+        <item>1: Mushroom (Cogumelo)</item>
+        <item>2: Magic Powder (Pó Mágico)</item>
+    </string-array>
+
+    <string-array name="item_flute_list">
+        <item>0: Nenhuma</item>
+        <item>1: Shovel (Pá)</item>
+        <item>2: Flute (Flauta Inativa)</item>
+        <item>3: Active Flute (Flauta com Pássaro Ativado)</item>
+    </string-array>
+
+    <string-array name="item_bombs_list">
+        <item>0 Bombas</item>
+        <item>10 Bombas</item>
+        <item>20 Bombas</item>
+        <item>30 Bombas</item>
+        <item>40 Bombas</item>
+        <item>50 Bombas</item>
+    </string-array>
+
+    <string-array name="item_magic_consumption_list">
+        <item>0: Normal (100% Consumo)</item>
+        <item>1: 1/2 Consumo (Half Magic)</item>
+        <item>2: 1/4 Consumo (Quarter Magic)</item>
+    </string-array>
+
+    <string-array name="item_bottle_list">
+        <item>0: Sem Garrafa</item>
+        <item>1: Garrafa Vazia</item>
+        <item>2: Poção Vermelha (Cura Vida)</item>
+        <item>3: Poção Verde (Cura Magia)</item>
+        <item>4: Poção Azul (Cura Vida + Magia)</item>
+        <item>5: Fada (Reviver ao morrer)</item>
+        <item>6: Abelha</item>
+        <item>7: Abelha Dourada</item>
+    </string-array>
+
+    <string-array name="item_hearts_list">
+        <item>3 Corações</item>
+        <item>4 Corações</item>
+        <item>5 Corações</item>
+        <item>6 Corações</item>
+        <item>7 Corações</item>
+        <item>8 Corações</item>
+        <item>9 Corações</item>
+        <item>10 Corações</item>
+        <item>11 Corações</item>
+        <item>12 Corações</item>
+        <item>13 Corações</item>
+        <item>14 Corações</item>
+        <item>15 Corações</item>
+        <item>16 Corações</item>
+        <item>17 Corações</item>
+        <item>18 Corações</item>
+        <item>19 Corações</item>
+        <item>20 Corações (Vida Máxima)</item>
+    </string-array>
+</resources>

@@ -1,0 +1,191 @@
+<resources>
+    <string name="app_name">Zelda3</string>
+
+    <!-- Header & Navigation -->
+    <string name="config_title">⚙️ Configurações</string>
+    <string name="btn_restore_defaults">Restaurar Padrão</string>
+    <string name="btn_save">💾 Salvar</string>
+    <string name="btn_close">✕ Fechar</string>
+    <string name="tab_general">🌍 Geral</string>
+    <string name="tab_graphics">🖥️ Gráficos</string>
+    <string name="tab_sound">🔊 Áudio</string>
+    <string name="tab_features">🎮 Gameplay</string>
+    <string name="tab_raw_ini">📝 Editor .ini</string>
+
+    <!-- Panel 1: Geral -->
+    <string name="section_general_title">Configurações Gerais [General]</string>
+    <string name="label_aspect_ratio">Proporção de Tela Widescreen (ExtendedAspectRatio):</string>
+    <string name="cb_autosave">Autosave: Salvar estado ao sair e recarregar ao iniciar</string>
+    <string name="cb_disable_frame_delay">Desativar atraso de quadros (DisableFrameDelay - para telas a 60Hz)</string>
+    <string name="cb_display_perf">Exibir desempenho de FPS no título (DisplayPerfInTitle)</string>
+    <string name="label_dialogue_language">Idioma dos Diálogos (Language):</string>
+
+    <!-- Panel 2: Gráficos -->
+    <string name="section_graphics_title">Configurações de Vídeo e Gráficos [Graphics]</string>
+    <string name="label_output_method">Método de Saída Gráfica (OutputMethod):</string>
+    <string name="label_window_scale">Escala de Renderização (WindowScale):</string>
+    <string name="cb_new_renderer">NewRenderer: PPU SNES Otimizado</string>
+    <string name="cb_enhanced_mode7">EnhancedMode7: Mapa do mundo em alta resolução</string>
+    <string name="cb_no_sprite_limits">NoSpriteLimits: Remove limite de sprites por scanline (sem flicker)</string>
+    <string name="cb_linear_filtering">LinearFiltering: Filtro suave / bilinear</string>
+    <string name="cb_ignore_aspect_ratio">IgnoreAspectRatio: Esticar imagem para tela cheia</string>
+    <string name="cb_dim_flashes">DimFlashes: Reduzir clarões e efeitos de flash intenso (Virtual Console)</string>
+    <string name="label_link_graphics">Sprite Customizado do Link (LinkGraphics .zspr):</string>
+    <string name="hint_link_graphics">caminho/para.zspr</string>
+    <string name="btn_download_sprites">🎨 Selecionar Sprite</string>
+    <string name="section_shaders_title">Filtros de Imagem e Nitidez (Shaders GLSL)</string>
+    <string name="cb_enable_shader">Ativar Filtro de Imagem / Shader</string>
+    <string name="label_shader_preset">Filtro Pré-definido:</string>
+    <string name="shader_desc_default">Selecione um filtro para melhorar a nitidez, cores ou adicionar efeitos retrô.</string>
+    <string name="label_custom_shader">Caminho do Arquivo Shader (.glsl):</string>
+    <string name="hint_custom_shader">shaders/sharp_bilinear.glsl</string>
+
+    <!-- Panel 3: Áudio -->
+    <string name="section_sound_title">Configurações de Áudio e Som [Sound]</string>
+    <string name="cb_enable_audio">EnableAudio: Ativar Áudio do Jogo</string>
+    <string name="label_audio_freq">Frequência de Áudio (AudioFreq):</string>
+    <string name="label_audio_samples">Tamanho do Buffer de Som (AudioSamples):</string>
+    <string name="label_audio_channels">Canais de Áudio (AudioChannels):</string>
+    <string name="label_enable_msu">Áudio Orquestrado MSU-1 (EnableMSU):</string>
+    <string name="cb_resume_msu">ResumeMSU: Lembrar posição da trilha MSU ao trocar de área</string>
+    <string name="label_msu_volume">Volume da Trilha MSU: %1$d%%</string>
+
+    <!-- Panel 4: Gameplay -->
+    <string name="section_features_title">Melhorias de Jogabilidade &amp; Recursos [Features]</string>
+    <string name="btn_open_item_editor">🎒 Selecionar / Editar Itens do Inventário</string>
+    <string name="cb_item_switch_lr">ItemSwitchLR: Trocar itens rápidos com botões L / R</string>
+    <string name="cb_item_switch_limit">ItemSwitchLRLimit: Limitar troca rápida apenas aos 4 primeiros itens</string>
+    <string name="cb_turn_while_dashing">TurnWhileDashing: Poder virar de direção durante a corrida (Pegasus Boots)</string>
+    <string name="cb_mirror_darkworld">MirrorToDarkworld: Permitir usar o Magic Mirror para voltar ao Dark World</string>
+    <string name="cb_collect_with_sword">CollectItemsWithSword: Coletar corações/itens golpeando com a espada</string>
+    <string name="cb_break_pots">BreakPotsWithSword: Quebrar potes com espada (Espada Nível 2 a 4)</string>
+    <string name="cb_disable_low_health_beep">DisableLowHealthBeep: Desativar bipe estridente de vida baixa</string>
+    <string name="cb_skip_intro">SkipIntroOnKeypress: Pular introdução da Triforce/História ao apertar botão</string>
+    <string name="cb_show_max_yellow">ShowMaxItemsInYellow: Exibir contador de Rupees/Bombas/Flechas cheias em amarelo</string>
+    <string name="cb_more_active_bombs">MoreActiveBombs: Permitir até 4 bombas ativas ao mesmo tempo (padrão é 2)</string>
+    <string name="cb_carry_more_rupees">CarryMoreRupees: Carteira para carregar até 9999 Rupees (padrão 999)</string>
+    <string name="cb_misc_bug_fixes">MiscBugFixes: Ativar correções de bugs gráficos e glitches do original</string>
+    <string name="cb_game_changing_bug_fixes">GameChangingBugFixes: Correções avançadas de glitches de gameplay</string>
+    <string name="cb_cancel_bird_travel">CancelBirdTravel: Cancelar voo da Flauta/Pássaro ao apertar X</string>
+    <string name="cb_skip_dialogue_a">SkipDialogueOnHoldA: Pular diálogos segurando o botão A (3s)</string>
+    <string name="cb_max_hearts">MaxHearts: Habilitar todos os 20 corações (Vida Máxima)</string>
+
+    <!-- Panel 5: Raw INI -->
+    <string name="section_raw_ini_title">Editor Manual de Texto do zelda3.ini</string>
+    <string name="btn_reload_raw">Recarregar Arquivo</string>
+
+    <!-- Toasts & Dialogs -->
+    <string name="toast_config_saved">Configurações salvas e aplicadas em tempo real no jogo!</string>
+    <string name="toast_config_save_error">Erro ao salvar zelda3.ini!</string>
+    <string name="toast_file_reloaded">Arquivo recarregado.</string>
+    <string name="dialog_restore_title">Restaurar Padrões</string>
+    <string name="dialog_restore_message">Deseja restaurar todas as configurações do zelda3.ini para os valores padrão de fábrica?</string>
+    <string name="dialog_restore_positive">Sim, Restaurar</string>
+    <string name="dialog_restore_negative">Cancelar</string>
+    <string name="toast_restore_success">Configurações restauradas e aplicadas em tempo real!</string>
+    <string name="toast_restore_error">Erro ao restaurar configurações.</string>
+
+    <!-- Dialogue Language options -->
+    <string name="lang_dialogue_pt">Português do Brasil (pt)</string>
+    <string name="lang_dialogue_us">English / Original (us)</string>
+
+    <!-- Shader Presets -->
+    <string name="shader_preset_none">Nenhum (Pixel Art Original)</string>
+    <string name="shader_desc_none">Renderização nativa pixel art clássica sem pós-processamento adicional.</string>
+    <string name="shader_preset_sharp_bilinear">Sharp Bilinear (Nitidez Perfeita / Anti-Shimmering)</string>
+    <string name="shader_desc_sharp_bilinear">Nitidez máxima dos pixels sem distorções ou ondulações ao movimentar a câmera.</string>
+    <string name="shader_preset_sharp_scanlines">Sharp Bilinear + Scanlines (Nítido com Scanlines)</string>
+    <string name="shader_desc_sharp_scanlines">Pixels nítidos combinados com linhas de varredura (scanlines) sutis estilo TV retrô.</string>
+    <string name="shader_preset_adv_sharpening">Advanced Sharpening (Nitidez Aprimorada / CAS)</string>
+    <string name="shader_desc_adv_sharpening">Filtro adaptativo de alta nitidez que realça bordas, texturas e detalhes dos sprites.</string>
+    <string name="shader_preset_scale2x">Scale2x / AdvMame (Pixel Art Suavizado)</string>
+    <string name="shader_desc_scale2x">Algoritmo inteligente que suaviza escadas de pixels em diagonais preservando contornos.</string>
+    <string name="shader_preset_hq2x">HQ2x (Alta Qualidade Suave)</string>
+    <string name="shader_desc_hq2x">Filtro avançado de interpolação e suavização 2x de alta fidelidade para pixel art.</string>
+    <string name="shader_preset_crt_easymode">CRT-Easymode (TV Tubo Clássica / Scanlines)</string>
+    <string name="shader_desc_crt_easymode">Simulação autêntica de monitor CRT retrô com scanlines, máscara de fósforo e contraste.</string>
+    <string name="shader_preset_bicubic">Bicubic Sharpen (Filtro Bicúbico Nítido)</string>
+    <string name="shader_desc_bicubic">Interpolação bicúbica suave com realce de nitidez para resoluções modernas.</string>
+    <string name="shader_preset_lcd_grid">LCD Grid (Matriz de LCD Portátil)</string>
+    <string name="shader_desc_lcd_grid">Simula a matriz de grade de tela LCD retrô portátil com nitidez uniforme.</string>
+    <string name="shader_preset_vibrant">Vibrant Enhancer (Cores Vivas &amp; Alto Contraste)</string>
+    <string name="shader_desc_vibrant">Acentua o contraste, saturação e vivacidade das cores em telas OLED e IPS.</string>
+    <string name="shader_preset_custom">Personalizado (.glsl customizado)</string>
+    <string name="shader_desc_custom">Carrega um arquivo shader customizado do armazenamento interno ou externo.</string>
+
+    <!-- Inventory Editor Dialog -->
+    <string name="inventory_title">🎒 Editor de Itens &amp; Inventário</string>
+    <string name="inventory_subtitle">Selecione os itens e seus níveis para equipar no Link</string>
+    <string name="btn_preset_max">⭐ Tudo no Máx.</string>
+    <string name="btn_preset_clean">🧹 Limpar Itens</string>
+    <string name="section_equipment">⚔️ Equipamentos Principais (Armas, Escudos &amp; Armaduras)</string>
+    <string name="label_sword">🗡️ Espada (Sword)</string>
+    <string name="label_shield">🛡️ Escudo (Shield)</string>
+    <string name="label_armor">🥋 Armadura / Túnica (Mail)</string>
+    <string name="label_gloves">🥊 Luvas de Força (Gloves)</string>
+    <string name="section_tools">🏹 Ferramentas &amp; Armas Secundárias</string>
+    <string name="label_bow">🏹 Arco &amp; Flechas (Bow)</string>
+    <string name="label_arrows">🎯 Qtd. Flechas</string>
+    <string name="label_boomerang">🪃 Bumerangue (Boomerang)</string>
+    <string name="label_mushroom">🍄 Cogumelo &amp; Pó Mágico</string>
+    <string name="label_flute">🎵 Flauta &amp; Pá (Flute / Shovel)</string>
+    <string name="label_bombs">💣 Bombas (Quantidade)</string>
+    <string name="cb_hookshot">🪝 Hookshot</string>
+    <string name="cb_torch">🏮 Lanterna</string>
+    <string name="cb_hammer">🔨 Martelo Mágico</string>
+    <string name="cb_bug_net">🕸️ Rede de Insetos</string>
+    <string name="cb_book_of_mudora">📖 Livro Mudora</string>
+    <string name="cb_boots">👢 Botas Pegasus</string>
+    <string name="cb_flippers">🏊 Nadadeiras</string>
+    <string name="cb_moon_pearl">🔮 Pérola da Lua</string>
+    <string name="section_magic">✨ Itens Mágicos, Cajados &amp; Medalhões</string>
+    <string name="cb_fire_rod">🔥 Cajado Fogo</string>
+    <string name="cb_ice_rod">❄️ Cajado Gelo</string>
+    <string name="cb_bombos">💥 Medalhão Bombos</string>
+    <string name="cb_ether">⚡ Medalhão Ether</string>
+    <string name="cb_quake">🌋 Medalhão Quake</string>
+    <string name="cb_cane_somaria">🦯 Cetro Somaria</string>
+    <string name="cb_cane_byrna">🪄 Cetro Byrna</string>
+    <string name="cb_cape">🧙 Capa Mágica</string>
+    <string name="cb_mirror">🪞 Espelho Mágico</string>
+    <string name="label_magic_consumption">⚡ Consumo de Magia:</string>
+    <string name="section_bottles_health">🫙 Garrafas Mágicas (Slots 1 a 4)</string>
+    <string name="label_bottle_1">🫙 Garrafa 1</string>
+    <string name="label_bottle_2">🫙 Garrafa 2</string>
+    <string name="label_bottle_3">🫙 Garrafa 3</string>
+    <string name="label_bottle_4">🫙 Garrafa 4</string>
+    <string name="section_health_pendants">❤️ Vida, Pingentes &amp; Cristais</string>
+    <string name="label_max_health">❤️ Capacidade de Corações:</string>
+    <string name="label_pendants">🎖️ Pingentes de Hyrule:</string>
+    <string name="cb_pendant_courage">🟢 Coragem</string>
+    <string name="cb_pendant_power">🔴 Poder</string>
+    <string name="cb_pendant_wisdom">🔵 Sabedoria</string>
+    <string name="label_crystals">💎 7 Cristais do Dark World:</string>
+    <string name="cb_crystal_1">💎 Cristal 1</string>
+    <string name="cb_crystal_2">💎 Cristal 2</string>
+    <string name="cb_crystal_3">💎 Cristal 3</string>
+    <string name="cb_crystal_4">💎 Cristal 4</string>
+    <string name="cb_crystal_5">💎 Cristal 5</string>
+    <string name="cb_crystal_6">💎 Cristal 6</string>
+    <string name="cb_crystal_7">💎 Cristal 7</string>
+    <string name="btn_cancel_items">✕ Cancelar</string>
+    <string name="btn_save_apply_items">💾 Salvar &amp; Aplicar no Jogo</string>
+    <string name="toast_preset_max">Preset \'Tudo no Máximo\' selecionado!</string>
+    <string name="toast_preset_clean">Inventário limpo.</string>
+    <string name="toast_inventory_saved">Inventário atualizado e aplicado com sucesso no jogo!</string>
+
+    <!-- Sprite Downloader -->
+    <string name="sprite_title">Selecionar Sprite do Link</string>
+    <string name="sprite_loading">Carregando sprites...</string>
+    <string name="sprite_close">Fechar</string>
+    <string name="sprite_select">Selecionar</string>
+    <string name="sprite_dialog_title">Selecionar Sprite</string>
+    <string name="sprite_dialog_message">Deseja selecionar \"%1$s\" como sprite do Link?</string>
+    <string name="sprite_yes">Sim</string>
+    <string name="sprite_no">Não</string>
+    <string name="sprite_toast_selected">Sprite \"%1$s\" selecionado com sucesso!</string>
+    <string name="sprite_toast_configured">Sprite configurado: %1$s</string>
+    <string name="sprite_toast_error">Erro ao configurar sprite: %1$s</string>
+    <string name="sprite_toast_none_found">Nenhum sprite encontrado nos assets.</string>
+    <string name="sprite_storage_unavailable">Armazenamento externo indisponível.</string>
+</resources>

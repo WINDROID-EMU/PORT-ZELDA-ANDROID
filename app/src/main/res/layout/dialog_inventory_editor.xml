@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="🎒 Editor de Itens &amp; Inventário"
+            android:text="@string/inventory_title"
             android:textColor="#FFD700"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_dialog_title"
-            android:text="Selecione os itens e seus níveis para equipar no Link"
+            android:text="@string/inventory_subtitle"
             android:textColor="#B0C2DE"
             android:textSize="11sp" />
 
@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:background="@drawable/btn_gold"
-                android:text="⭐ Tudo no Máx."
+                android:text="@string/btn_preset_max"
                 android:textColor="#000000"
                 android:textSize="10sp"
                 android:textStyle="bold"
@@ -56,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:background="@drawable/btn_dark"
-                android:text="🧹 Limpar Itens"
+                android:text="@string/btn_preset_clean"
                 android:textColor="#FFFFFF"
                 android:textSize="10sp"
                 android:paddingLeft="8dp"
@@ -87,7 +87,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⚔️ Equipamentos Principais (Armas, Escudos &amp; Armaduras)"
+                    android:text="@string/section_equipment"
                     android:textColor="#FFD700"
                     android:textSize="13sp"
                     android:textStyle="bold"
@@ -110,7 +110,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🗡️ Espada (Sword)"
+                            android:text="@string/label_sword"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -131,7 +131,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🛡️ Escudo (Shield)"
+                            android:text="@string/label_shield"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -151,7 +151,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🥋 Armadura / Túnica (Mail)"
+                            android:text="@string/label_armor"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -171,7 +171,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🥊 Luvas de Força (Gloves)"
+                            android:text="@string/label_gloves"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -195,7 +195,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🏹 Ferramentas &amp; Armas Secundárias"
+                    android:text="@string/section_tools"
                     android:textColor="#FFD700"
                     android:textSize="13sp"
                     android:textStyle="bold"
@@ -218,7 +218,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🏹 Arco &amp; Flechas (Bow)"
+                            android:text="@string/label_bow"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -239,7 +239,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🎯 Qtd. Flechas"
+                            android:text="@string/label_arrows"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -260,7 +260,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🪃 Bumerangue (Boomerang)"
+                            android:text="@string/label_boomerang"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -281,7 +281,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🍄 Cogumelo &amp; Pó Mágico"
+                            android:text="@string/label_mushroom"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -301,7 +301,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🎵 Flauta &amp; Pá (Flute / Shovel)"
+                            android:text="@string/label_flute"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -321,7 +321,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="💣 Bombas (Quantidade)"
+                            android:text="@string/label_bombs"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -344,7 +344,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="🪝 Hookshot"
+                        android:text="@string/cb_hookshot"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
@@ -353,7 +353,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="🏮 Lanterna"
+                        android:text="@string/cb_torch"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
@@ -362,7 +362,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="🔨 Martelo"
+                        android:text="@string/cb_hammer"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
@@ -371,7 +371,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="🕸️ Rede Insetos"
+                        android:text="@string/cb_bug_net"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
@@ -380,7 +380,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="📖 Livro Mudora"
+                        android:text="@string/cb_book_of_mudora"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
@@ -389,7 +389,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="👢 Botas Pegasus"
+                        android:text="@string/cb_boots"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
@@ -398,7 +398,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="🏊 Nadadeiras"
+                        android:text="@string/cb_flippers"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
@@ -407,7 +407,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="🔮 Pérola da Lua"
+                        android:text="@string/cb_moon_pearl"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                 </GridLayout>
@@ -425,7 +425,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="✨ Itens Mágicos, Cajados &amp; Medalhões"
+                    android:text="@string/section_magic"
                     android:textColor="#FFD700"
                     android:textSize="13sp"
                     android:textStyle="bold"
@@ -441,7 +441,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="🔥 Cajado Fogo"
+                        android:text="@string/cb_fire_rod"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
@@ -450,7 +450,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="❄️ Cajado Gelo"
+                        android:text="@string/cb_ice_rod"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
@@ -459,7 +459,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="💥 Medalhão Bombos"
+                        android:text="@string/cb_bombos"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
@@ -468,7 +468,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="⚡ Medalhão Ether"
+                        android:text="@string/cb_ether"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
@@ -477,43 +477,43 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="🌋 Medalhão Quake"
+                        android:text="@string/cb_quake"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
                     <CheckBox
-                        android:id="@+id/cb_item_cane_somaria"
+                        android:id="@+id/cb_cane_somaria"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="🦯 Cetro Somaria"
+                        android:text="@string/cb_cane_somaria"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
                     <CheckBox
-                        android:id="@+id/cb_item_cane_byrna"
+                        android:id="@+id/cb_cane_byrna"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="🪄 Cetro Byrna"
+                        android:text="@string/cb_cane_byrna"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
                     <CheckBox
-                        android:id="@+id/cb_item_cape"
+                        android:id="@+id/cb_cape"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="🧙 Capa Mágica"
+                        android:text="@string/cb_cape"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
 
                     <CheckBox
-                        android:id="@+id/cb_item_mirror"
+                        android:id="@+id/cb_mirror"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="🪞 Espelho Mágico"
+                        android:text="@string/cb_mirror"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                 </GridLayout>
@@ -528,7 +528,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="⚡ Consumo de Magia:"
+                        android:text="@string/label_magic_consumption"
                         android:textColor="#B0C2DE"
                         android:textSize="11sp"
                         android:layout_marginRight="8dp" />
@@ -554,7 +554,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🫙 Garrafas Mágicas (Slots 1 a 4)"
+                    android:text="@string/section_bottles_health"
                     android:textColor="#FFD700"
                     android:textSize="13sp"
                     android:textStyle="bold"
@@ -577,7 +577,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🫙 Garrafa 1"
+                            android:text="@string/label_bottle_1"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -598,7 +598,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🫙 Garrafa 2"
+                            android:text="@string/label_bottle_2"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -618,7 +618,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🫙 Garrafa 3"
+                            android:text="@string/label_bottle_3"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -638,7 +638,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🫙 Garrafa 4"
+                            android:text="@string/label_bottle_4"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -662,7 +662,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="❤️ Vida, Pingentes &amp; Cristais"
+                    android:text="@string/section_health_pendants"
                     android:textColor="#FFD700"
                     android:textSize="13sp"
                     android:textStyle="bold"
@@ -679,7 +679,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="❤️ Capacidade de Corações:"
+                        android:text="@string/label_max_health"
                         android:textColor="#B0C2DE"
                         android:textSize="11sp"
                         android:layout_marginRight="8dp" />
@@ -696,7 +696,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🎖️ Pingentes de Hyrule:"
+                    android:text="@string/label_pendants"
                     android:textColor="#B0C2DE"
                     android:textSize="11sp"
                     android:layout_marginTop="4dp" />
@@ -710,7 +710,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="🟢 Coragem"
+                        android:text="@string/cb_pendant_courage"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                     <CheckBox
@@ -718,7 +718,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="🔵 Sabedoria"
+                        android:text="@string/cb_pendant_wisdom"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                     <CheckBox
@@ -726,7 +726,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="🔴 Poder"
+                        android:text="@string/cb_pendant_power"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -735,7 +735,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="💎 7 Cristais do Dark World:"
+                    android:text="@string/label_crystals"
                     android:textColor="#B0C2DE"
                     android:textSize="11sp"
                     android:layout_marginTop="4dp" />
@@ -749,7 +749,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="💎 Cristal 1"
+                        android:text="@string/cb_crystal_1"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                     <CheckBox
@@ -757,7 +757,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="💎 Cristal 2"
+                        android:text="@string/cb_crystal_2"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                     <CheckBox
@@ -765,7 +765,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="💎 Cristal 3"
+                        android:text="@string/cb_crystal_3"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                     <CheckBox
@@ -773,7 +773,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="💎 Cristal 4"
+                        android:text="@string/cb_crystal_4"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                     <CheckBox
@@ -781,7 +781,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="💎 Cristal 5"
+                        android:text="@string/cb_crystal_5"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                     <CheckBox
@@ -789,7 +789,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="💎 Cristal 6"
+                        android:text="@string/cb_crystal_6"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                     <CheckBox
@@ -797,7 +797,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
-                        android:text="💎 Cristal 7"
+                        android:text="@string/cb_crystal_7"
                         android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                 </GridLayout>
@@ -818,7 +818,7 @@
             android:layout_height="38dp"
             android:layout_weight="1"
             android:background="@drawable/btn_dark"
-            android:text="Cancelar"
+            android:text="@string/btn_cancel_items"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
             android:layout_marginRight="6dp" />
@@ -829,7 +829,7 @@
             android:layout_height="38dp"
             android:layout_weight="2"
             android:background="@drawable/btn_gold"
-            android:text="💾 Salvar &amp; Aplicar no Jogo"
+            android:text="@string/btn_save_apply_items"
             android:textColor="#000000"
             android:textSize="12sp"
             android:textStyle="bold"

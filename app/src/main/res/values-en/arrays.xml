@@ -1,0 +1,113 @@
+<resources>
+    <string-array name="item_sword_list">
+        <item>0: No Sword</item>
+        <item>1: Fighter\'s Sword (Level 1)</item>
+        <item>2: Master Sword (Level 2)</item>
+        <item>3: Tempered Sword (Level 3)</item>
+        <item>4: Golden Sword (Level 4)</item>
+    </string-array>
+
+    <string-array name="item_shield_list">
+        <item>0: No Shield</item>
+        <item>1: Fighter\'s Shield (Level 1)</item>
+        <item>2: Red Shield (Fire - Level 2)</item>
+        <item>3: Mirror Shield (Mirror - Level 3)</item>
+    </string-array>
+
+    <string-array name="item_armor_list">
+        <item>0: Green Mail (Green Tunic - Normal)</item>
+        <item>1: Blue Mail (Blue Tunic - 1/2 Damage)</item>
+        <item>2: Red Mail (Red Tunic - 1/4 Damage)</item>
+    </string-array>
+
+    <string-array name="item_gloves_list">
+        <item>0: No Gloves</item>
+        <item>1: Power Glove (Level 1 - Light Stones)</item>
+        <item>2: Titan\'s Mitt (Level 2 - Heavy Stones)</item>
+    </string-array>
+
+    <string-array name="item_bow_list">
+        <item>0: No Bow</item>
+        <item>1: Bow (Wooden Bow without arrows)</item>
+        <item>2: Bow &amp; Arrows (Standard Bow &amp; Arrows)</item>
+        <item>3: Silver Bow (Silver Bow without arrows)</item>
+        <item>4: Silver Bow &amp; Arrows (Silver Bow &amp; Arrows)</item>
+    </string-array>
+
+    <string-array name="item_arrows_list">
+        <item>0 Arrows</item>
+        <item>10 Arrows</item>
+        <item>20 Arrows</item>
+        <item>30 Arrows</item>
+        <item>40 Arrows</item>
+        <item>50 Arrows</item>
+        <item>60 Arrows</item>
+        <item>70 Arrows</item>
+    </string-array>
+
+    <string-array name="item_boomerang_list">
+        <item>0: No Boomerang</item>
+        <item>1: Blue Boomerang (Blue)</item>
+        <item>2: Magical Boomerang (Red Magical)</item>
+    </string-array>
+
+    <string-array name="item_mushroom_list">
+        <item>0: None</item>
+        <item>1: Mushroom (Mushroom)</item>
+        <item>2: Magic Powder (Magic Powder)</item>
+    </string-array>
+
+    <string-array name="item_flute_list">
+        <item>0: None</item>
+        <item>1: Shovel (Shovel)</item>
+        <item>2: Flute (Inactive Flute)</item>
+        <item>3: Active Flute (Flute with Bird Active)</item>
+    </string-array>
+
+    <string-array name="item_bombs_list">
+        <item>0 Bombs</item>
+        <item>10 Bombs</item>
+        <item>20 Bombs</item>
+        <item>30 Bombs</item>
+        <item>40 Bombs</item>
+        <item>50 Bombs</item>
+    </string-array>
+
+    <string-array name="item_magic_consumption_list">
+        <item>0: Normal (100% Usage)</item>
+        <item>1: 1/2 Usage (Half Magic)</item>
+        <item>2: 1/4 Usage (Quarter Magic)</item>
+    </string-array>
+
+    <string-array name="item_bottle_list">
+        <item>0: No Bottle</item>
+        <item>1: Empty Bottle</item>
+        <item>2: Red Potion (Heals Health)</item>
+        <item>3: Green Potion (Restores Magic)</item>
+        <item>4: Blue Potion (Heals Health + Magic)</item>
+        <item>5: Fairy (Revives on Death)</item>
+        <item>6: Bee</item>
+        <item>7: Good Bee</item>
+    </string-array>
+
+    <string-array name="item_hearts_list">
+        <item>3 Hearts</item>
+        <item>4 Hearts</item>
+        <item>5 Hearts</item>
+        <item>6 Hearts</item>
+        <item>7 Hearts</item>
+        <item>8 Hearts</item>
+        <item>9 Hearts</item>
+        <item>10 Hearts</item>
+        <item>11 Hearts</item>
+        <item>12 Hearts</item>
+        <item>13 Hearts</item>
+        <item>14 Hearts</item>
+        <item>15 Hearts</item>
+        <item>16 Hearts</item>
+        <item>17 Hearts</item>
+        <item>18 Hearts</item>
+        <item>19 Hearts</item>
+        <item>20 Hearts (Max Health)</item>
+    </string-array>
+</resources>
