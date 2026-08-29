@@ -306,12 +306,27 @@ JNIEXPORT jbyteArray JNICALL Java_com_dishii_zelda3_MainActivity_nativeGetInvent
   uint8 temp[64];
   memset(temp, 0, sizeof(temp));
 
-  // Lê da RAM do jogo ativo
-  memcpy(temp, &g_ram[0xF340], 64);
+  int offs = 0;
+  if (g_zenv.sram != NULL && srm_var1 >= 2 && srm_var1 <= 6) {
+    offs = ((srm_var1 >> 1) - 1) * 0x500;
+  }
 
-  // Se a RAM estiver zerada (ex: antes de iniciar um jogo), tenta pegar do SRAM
-  if (temp[0x19] == 0 && temp[0x2C] == 0 && g_zenv.sram != NULL) {
-    memcpy(temp, g_zenv.sram + 0x340, 64);
+  // Se a RAM do jogo estiver ativa (vida, espada, luvas ou itens presentes)
+  if (g_ram[0xF36C] != 0 || g_ram[0xF359] != 0 || g_ram[0xF340] != 0 || g_ram[0xF354] != 0) {
+    memcpy(temp, &g_ram[0xF340], 64);
+  } else if (g_zenv.sram != NULL) {
+    // Se a RAM estiver zerada (ex: antes de iniciar o jogo), lê do SRAM do slot ativo
+    memcpy(temp, g_zenv.sram + offs + 0x340, 64);
+    // Se esse slot estiver zerado no SRAM, busca o primeiro slot com dados válidos
+    if (temp[0x19] == 0 && temp[0x2C] == 0) {
+      for (int i = 0; i < 3; i++) {
+        uint8 *slot_ptr = g_zenv.sram + (i * 0x500);
+        if (slot_ptr[0x340 + 0x2C] != 0 || slot_ptr[0x340 + 0x19] != 0) {
+          memcpy(temp, slot_ptr + 0x340, 64);
+          break;
+        }
+      }
+    }
   }
 
   (*env)->SetByteArrayRegion(env, array, 0, 64, (jbyte*)temp);
@@ -327,13 +342,16 @@ JNIEXPORT void JNICALL Java_com_dishii_zelda3_MainActivity_nativeSetInventory(JN
   jbyte *items = (*env)->GetByteArrayElements(env, data, NULL);
   if (!items) return;
 
+  // Atualiza a memória WRAM do jogo
   memcpy(&g_ram[0xF340], items, 64);
 
-  // Ajusta flags de habilidade caso tenha ganho botas ou nadadeiras
-  if (link_item_flippers) link_ability_flags |= 1;
-  if (link_item_boots) link_ability_flags |= 2;
+  // CRÍTICO: Preserva os bits base de habilidades de interação (0xF8 = Pegar, Ler, Abrir baús, Puxar, etc.)
+  // e adiciona Botas (bit 2 = 0x04) e Nadadeiras (bit 1 = 0x02)
+  link_ability_flags |= 0xF8;
+  if (link_item_boots) link_ability_flags |= 0x04;
+  if (link_item_flippers) link_ability_flags |= 0x02;
 
-  // Atualiza vida atual se capacidade foi aumentada
+  // Atualiza vida atual se capacidade foi aumentada ou se estiver zerada
   if (link_health_current < link_health_capacity || link_health_current == 0) {
     link_health_current = link_health_capacity;
   }
@@ -348,19 +366,32 @@ JNIEXPORT void JNICALL Java_com_dishii_zelda3_MainActivity_nativeSetInventory(JN
     }
   }
 
-  // Atualiza paletas visuais do Link para refletir nova espada, escudo e armadura
+  // Atualiza paletas visuais do Link para refletir nova espada, escudo, armadura e luvas
   LoadGearPalettes(link_sword_type, link_shield_type, link_armor);
+  Palette_UpdateGlovesColor();
 
   // Notifica engine de emulação/RAM
   EmuSyncMemoryRegion(&g_ram[0xF340], 64);
 
-  // Sincroniza e grava no arquivo SRAM
+  // Sincroniza e grava no arquivo SRAM de forma segura no slot ativo
   if (g_zenv.sram != NULL) {
-    uint16 offs = WORD(g_ram[0]);
-    if (offs > 0x1000) offs = 0;
-    memcpy(g_zenv.sram + offs + 0x340, items, 64);
-    memcpy(g_zenv.sram + offs + 0xf00 + 0x340, items, 64);
+    int offs = 0;
+    if (srm_var1 >= 2 && srm_var1 <= 6) {
+      offs = ((srm_var1 >> 1) - 1) * 0x500;
+    }
+
+    // Copia para o slot principal e para o backup de segurança
+    memcpy(g_zenv.sram + offs + 0x340, &g_ram[0xF340], 64);
+    memcpy(g_zenv.sram + offs + 0xf00 + 0x340, &g_ram[0xF340], 64);
+
+    // Recalcula checksums válidos para ambos os slots (principal e backup)
     Intro_FixCksum(g_zenv.sram + offs);
+    Intro_FixCksum(g_zenv.sram + offs + 0xf00);
+
+    // Atualiza checksum na WRAM
+    word_7EF4FE = WORD(g_zenv.sram[offs + 0x4fe]);
+
+    // Grava de volta no disco
     ZeldaWriteSram();
   }
 

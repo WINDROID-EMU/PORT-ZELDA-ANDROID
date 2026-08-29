@@ -1,3 +1,4 @@
+#include <math.h>
 #include "ancilla.h"
 #include "variables.h"
 #include "sprite.h"
@@ -1255,6 +1256,123 @@ void Ancilla_MoveZ(int k) {  // 8890b7
   ancilla_z_subpixel[k] = t, ancilla_z[k] = t >> 8;
 }
 
+static bool Boomerang_IsValidEnemyTarget(int j) {
+  uint8 type = sprite_type[j];
+
+  // Must be within standard enemy range
+  if (type >= 0xd8)
+    return false;
+
+  // Exclude projectiles, thrown objects, lasers, hazards, and indestructible traps
+  if (type == 0x1b || // Arrow
+      type == 0x50 || // Cannonball
+      type == 0x61 || // Beamos
+      (type >= 0x5d && type <= 0x60) || // Rollers
+      (type >= 0x66 && type <= 0x69) || // Wall Cannons
+      type == 0x70 || // Helmasaur Fireball
+      type == 0x7b || // Agahnim Energy Balls
+      type == 0x7d || // Big Spike
+      type == 0x7e || type == 0x7f || // Firebars
+      type == 0x87 || // Kodongo Fire
+      type == 0x89 || // Mothula Beam
+      type == 0x8a || // Spike Block
+      type == 0x93 || // Bumper
+      (type >= 0x95 && type <= 0x98) || // Laser Eyes
+      type == 0xa4 || // Falling Ice
+      type == 0xbf || // Vitreous Lightning
+      type == 0xc2 || // Boulder
+      type == 0xc5 || // Medusa Fireball
+      type == 0xc6 || // 4-Way Shooter
+      type == 0xd1 || // Bunny Beam
+      type == 0xd4 || // Landmine
+      type == 0xec)   // Thrown Item / Rock / Pot / Scenery
+    return false;
+
+  // For Zora (0x55): if sprite_E is non-zero, it is a fireball projectile!
+  if (type == 0x55 && sprite_E[j] != 0)
+    return false;
+
+  // Exclude friendly NPCs and invulnerable entities
+  if (sprite_flags3[j] & 0x40)
+    return false;
+
+  // Exclude sprites marked to ignore projectiles
+  if (sprite_ignore_projectile[j])
+    return false;
+
+  // Real enemies must have health
+  if (sprite_health[j] == 0)
+    return false;
+
+  // Must be active and not currently stunned/frozen/dying
+  if (sprite_state[j] != 9 || sprite_stunned[j] != 0 || sprite_hit_timer[j] != 0)
+    return false;
+
+  return true;
+}
+
+static bool Boomerang_IsValidItemTarget(int j) {
+  // Must have the boomerang-grabbable flag (sprite_defl_bits & 2)
+  // Must NOT already be grabbed (sprite_B == 0)
+  // Must NOT be thrown scenery/rock (type 0xEC)
+  if (!(sprite_defl_bits[j] & 2) || sprite_B[j] != 0 || sprite_type[j] == 0xec)
+    return false;
+
+  // Must be active
+  if (sprite_state[j] < 9)
+    return false;
+
+  return true;
+}
+
+static int Boomerang_FindTarget(int k) {
+  uint16 bx = Ancilla_GetX(k) + 8;
+  uint16 by = Ancilla_GetY(k) + 8;
+  uint8 link_floor = link_is_on_lower_level;
+
+  int best_enemy = -1;
+  uint32 best_enemy_dist = 0xFFFFFFFF;
+
+  int best_item = -1;
+  uint32 best_item_dist = 0xFFFFFFFF;
+
+  for (int j = 0; j < 16; j++) {
+    if (sprite_state[j] < 9 || sprite_pause[j])
+      continue;
+    if (sprite_floor[j] != link_floor)
+      continue;
+
+    uint16 spr_x = Sprite_GetX(j) + 8;
+    uint16 spr_y = Sprite_GetY(j) + 8;
+
+    int dx = (int)spr_x - (int)bx;
+    int dy = (int)spr_y - (int)by;
+    uint32 dist = (uint32)(dx * dx + dy * dy);
+
+    if (dist > 320 * 320)
+      continue;
+
+    if (Boomerang_IsValidEnemyTarget(j)) {
+      if (dist < best_enemy_dist) {
+        best_enemy_dist = dist;
+        best_enemy = j;
+      }
+    } else if (Boomerang_IsValidItemTarget(j)) {
+      if (dist < best_item_dist) {
+        best_item_dist = dist;
+        best_item = j;
+      }
+    }
+  }
+
+  if (best_enemy >= 0)
+    return best_enemy;
+  if (best_item >= 0)
+    return best_item;
+
+  return -1;
+}
+
 void Ancilla05_Boomerang(int k) {  // 8890fc
   int hit_spr;
   static const int8 kBoomerang_X0[8] = {0, 0, -8, 8, 8, 8, -8, -8};
@@ -1296,6 +1414,22 @@ void Ancilla05_Boomerang(int k) {  // 8890fc
     ancilla_x_vel[k] = pt.x;
     ancilla_y_vel[k] = pt.y;
     link_y_coord = WORD(ancilla_A[k]);
+  } else {
+    int target = Boomerang_FindTarget(k);
+    if (target >= 0) {
+      uint16 tx = Sprite_GetX(target) + 8;
+      uint16 ty = Sprite_GetY(target) + 8;
+      uint16 bx = Ancilla_GetX(k) + 8;
+      uint16 by = Ancilla_GetY(k) + 8;
+      int dx = (int)tx - (int)bx;
+      int dy = (int)ty - (int)by;
+      double dist = hypot((double)dx, (double)dy);
+      if (dist > 1.0) {
+        uint8 speed = ancilla_H[k];
+        ancilla_x_vel[k] = (int8)round((dx / dist) * speed);
+        ancilla_y_vel[k] = (int8)round((dy / dist) * speed);
+      }
+    }
   }
 
   if (ancilla_y_vel[k])
@@ -1309,13 +1443,13 @@ void Ancilla05_Boomerang(int k) {  // 8890fc
 
   if (!ancilla_item_to_link[k]) {
     if (hit_spr >= 0) {
-      ancilla_item_to_link[k] ^= 1;
+      ancilla_item_to_link[k] = 1;
     } else if (Ancilla_CheckTileCollision(k)) {
       AncillaAdd_BoomerangWallClink(k);
       Ancilla_Sfx2_Pan(k, (ancilla_tile_attr[k] == 0xf0) ? 6 : 5);
-      ancilla_item_to_link[k] ^= 1;
+      ancilla_item_to_link[k] = 1;
     } else if (Boomerang_ScreenEdge(k) || --ancilla_step[k] == 0) {
-      ancilla_item_to_link[k] ^= 1;
+      ancilla_item_to_link[k] = 1;
     } else {
       if (ancilla_step[k] < 5)
         ancilla_K[k]--;

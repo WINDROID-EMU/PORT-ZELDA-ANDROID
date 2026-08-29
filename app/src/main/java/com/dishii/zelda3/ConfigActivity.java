@@ -876,9 +876,9 @@ public class ConfigActivity extends Activity {
 
             // Pingentes & Cristais
             int pendants = raw[0x34] & 0xFF;
-            cbPendantPower.setChecked((pendants & 1) != 0);
+            cbPendantCourage.setChecked((pendants & 1) != 0);
             cbPendantWisdom.setChecked((pendants & 2) != 0);
-            cbPendantCourage.setChecked((pendants & 4) != 0);
+            cbPendantPower.setChecked((pendants & 4) != 0);
 
             int crystals = raw[0x3A] & 0xFF;
             cbCrystal1.setChecked((crystals & (1 << 0)) != 0);
@@ -1115,9 +1115,9 @@ public class ConfigActivity extends Activity {
 
                 // Pendants (0x34)
                 int pendants = 0;
-                if (cbPendantPower.isChecked()) pendants |= 1;
+                if (cbPendantCourage.isChecked()) pendants |= 1;
                 if (cbPendantWisdom.isChecked()) pendants |= 2;
-                if (cbPendantCourage.isChecked()) pendants |= 4;
+                if (cbPendantPower.isChecked()) pendants |= 4;
                 data[0x34] = (byte) pendants;
 
                 // Arrows (0x37)
@@ -1125,10 +1125,10 @@ public class ConfigActivity extends Activity {
                 data[0x37] = (byte) arrowCount;
                 data[0x31] = (byte) (arrowCount > 30 ? 7 : 0);
 
-                // Ability flags (0x39)
-                int abilities = 0;
-                if (cbFlippers.isChecked()) abilities |= 1;
-                if (cbBoots.isChecked()) abilities |= 2;
+                // Ability flags (0x39) - 0xF8 são as habilidades básicas de interação (pegar itens, ler placas, abrir baús, puxar)
+                int abilities = 0xF8;
+                if (cbBoots.isChecked()) abilities |= 4;
+                if (cbFlippers.isChecked()) abilities |= 2;
                 data[0x39] = (byte) abilities;
 
                 // Crystals (0x3A)
@@ -1169,12 +1169,21 @@ public class ConfigActivity extends Activity {
             if (externalDir != null) {
                 File sramFile = new File(externalDir, "saves/sram.dat");
                 if (sramFile.exists() && sramFile.length() >= 0x380) {
-                    byte[] buf = new byte[64];
+                    byte[] sram = new byte[(int) sramFile.length()];
                     try (FileInputStream fis = new FileInputStream(sramFile)) {
-                        long skipped = fis.skip(0x340);
-                        if (skipped == 0x340) {
-                            int read = fis.read(buf);
-                            if (read == 64) {
+                        int totalRead = 0;
+                        while (totalRead < sram.length) {
+                            int r = fis.read(sram, totalRead, sram.length - totalRead);
+                            if (r <= 0) break;
+                            totalRead += r;
+                        }
+                    }
+                    for (int slot = 0; slot < 3; slot++) {
+                        int slotOffs = slot * 0x500;
+                        int invOffs = slotOffs + 0x340;
+                        if (invOffs + 64 <= sram.length) {
+                            byte[] buf = Arrays.copyOfRange(sram, invOffs, invOffs + 64);
+                            if (!isAllZeros(buf)) {
                                 return buf;
                             }
                         }
