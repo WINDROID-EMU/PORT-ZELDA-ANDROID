@@ -161,7 +161,7 @@ public class MainActivity extends SDLActivity {
                 dpadUp, dpadDown, dpadLeft, dpadRight
             };
             
-            toggleButton = new ButtonDef("H", w / 2f, bw * 1.2f, bw * 0.5f, 0);
+            toggleButton = new ButtonDef("☰", w / 2f, bw * 1.2f, bw * 0.5f, 0);
         }
 
         @Override

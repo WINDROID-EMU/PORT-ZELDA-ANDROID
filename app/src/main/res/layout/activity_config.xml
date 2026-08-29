@@ -26,7 +26,7 @@
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="⚙️ Configurações Zelda 3 (zelda3.ini)"
+                android:text="⚙️ Configurações"
                 android:textColor="#FFC107"
                 android:textSize="17sp"
                 android:textStyle="bold" />
@@ -35,7 +35,7 @@
                 android:id="@+id/tv_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="As alterações são gravadas em zelda3.ini. Toque em Salvar para aplicar."
+                android:text=""
                 android:textColor="#8B9BB4"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -50,38 +50,38 @@
             <Button
                 android:id="@+id/btn_restore_defaults"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="34dp"
+                android:layout_marginRight="6dp"
                 android:background="@drawable/btn_danger"
-                android:text="Restaurar Padrão"
-                android:textColor="#FFFFFF"
-                android:textSize="11sp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:layout_marginRight="6dp" />
+                android:text="Restaurar Padrão"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp" />
 
             <Button
                 android:id="@+id/btn_save"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="34dp"
+                android:layout_marginRight="6dp"
                 android:background="@drawable/btn_gold"
-                android:text="💾 Salvar"
-                android:textColor="#1A1500"
-                android:textStyle="bold"
-                android:textSize="12sp"
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp"
-                android:layout_marginRight="6dp" />
+                android:text="💾 Salvar"
+                android:textColor="#1A1500"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_close"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="34dp"
                 android:background="@drawable/btn_dark"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
                 android:text="✕ Fechar"
                 android:textColor="#FFFFFF"
-                android:textSize="12sp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp" />
+                android:textSize="12sp" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -115,7 +115,7 @@
                     android:id="@+id/tab_general"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:text="🎮 Geral"
+                    android:text="🌍 Geral"
                     android:textColor="#FFD700"
                     android:background="@drawable/btn_dark"
                     android:textSize="12sp"
@@ -127,7 +127,7 @@
                     android:id="@+id/tab_graphics"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:text="🎨 Gráficos"
+                    android:text="🖥️ Gráficos"
                     android:textColor="#B0C2DE"
                     android:background="@drawable/btn_dark"
                     android:textSize="12sp"
@@ -151,7 +151,7 @@
                     android:id="@+id/tab_features"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:text="⚔️ Gameplay"
+                    android:text="🎮 Gameplay"
                     android:textColor="#B0C2DE"
                     android:background="@drawable/btn_dark"
                     android:textSize="12sp"

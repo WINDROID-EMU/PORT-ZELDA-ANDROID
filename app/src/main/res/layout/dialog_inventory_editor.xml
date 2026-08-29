@@ -554,7 +554,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🧪 Garrafas Mágicas (Slots 1 a 4)"
+                    android:text="🫙 Garrafas Mágicas (Slots 1 a 4)"
                     android:textColor="#FFD700"
                     android:textSize="13sp"
                     android:textStyle="bold"
@@ -577,7 +577,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🧪 Garrafa 1"
+                            android:text="🫙 Garrafa 1"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -598,7 +598,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🧪 Garrafa 2"
+                            android:text="🫙 Garrafa 2"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -618,7 +618,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🧪 Garrafa 3"
+                            android:text="🫙 Garrafa 3"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
@@ -638,7 +638,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🧪 Garrafa 4"
+                            android:text="🫙 Garrafa 4"
                             android:textColor="#B0C2DE"
                             android:textSize="11sp" />
                         <Spinner
