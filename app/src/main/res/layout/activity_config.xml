@@ -160,6 +160,18 @@
                     android:layout_marginBottom="4dp" />
 
                 <Button
+                    android:id="@+id/tab_saves"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="@string/tab_saves"
+                    android:textColor="#B0C2DE"
+                    android:background="@drawable/btn_dark"
+                    android:textSize="12sp"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="8dp"
+                    android:layout_marginBottom="4dp" />
+
+                <Button
                     android:id="@+id/tab_raw_ini"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -877,7 +889,476 @@
                 </LinearLayout>
             </ScrollView>
 
-            <!-- Panel 5: Editor Direto (.ini) -->
+            <!-- Panel 5: Save States & Checkpoints -->
+            <ScrollView
+                android:id="@+id/panel_saves"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/section_saves_title"
+                        android:textColor="#FFD700"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Quick Slots Card -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/card_bg"
+                        android:padding="8dp"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/section_quick_slots_title"
+                            android:textColor="#4DD0E1"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/quick_slots_desc"
+                            android:textColor="#8B9BB4"
+                            android:textSize="11sp"
+                            android:layout_marginBottom="8dp" />
+
+                        <!-- Slot 1 -->
+                        <LinearLayout
+                            android:id="@+id/card_slot_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/card_bg"
+                            android:padding="6dp"
+                            android:layout_marginBottom="4dp">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tv_slot_1_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Slot 1"
+                                    android:textColor="#FFD700"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tv_slot_1_info"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/slot_status_empty"
+                                    android:textColor="#8B9BB4"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/btn_slot_1_save"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:background="@drawable/btn_gold"
+                                android:text="@string/btn_slot_save"
+                                android:textColor="#1A1500"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp" />
+
+                            <Button
+                                android:id="@+id/btn_slot_1_load"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="4dp"
+                                android:background="@drawable/btn_dark"
+                                android:text="@string/btn_slot_load"
+                                android:textColor="#FFFFFF"
+                                android:textSize="11sp"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp" />
+
+                            <Button
+                                android:id="@+id/btn_slot_1_delete"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="4dp"
+                                android:background="@drawable/btn_danger"
+                                android:text="@string/btn_slot_delete"
+                                android:textColor="#FFFFFF"
+                                android:textSize="11sp"
+                                android:paddingLeft="8dp"
+                                android:paddingRight="8dp" />
+                        </LinearLayout>
+
+                        <!-- Slot 2 -->
+                        <LinearLayout
+                            android:id="@+id/card_slot_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/card_bg"
+                            android:padding="6dp"
+                            android:layout_marginBottom="4dp">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tv_slot_2_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Slot 2"
+                                    android:textColor="#FFD700"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tv_slot_2_info"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/slot_status_empty"
+                                    android:textColor="#8B9BB4"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/btn_slot_2_save"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:background="@drawable/btn_gold"
+                                android:text="@string/btn_slot_save"
+                                android:textColor="#1A1500"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp" />
+
+                            <Button
+                                android:id="@+id/btn_slot_2_load"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="4dp"
+                                android:background="@drawable/btn_dark"
+                                android:text="@string/btn_slot_load"
+                                android:textColor="#FFFFFF"
+                                android:textSize="11sp"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp" />
+
+                            <Button
+                                android:id="@+id/btn_slot_2_delete"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="4dp"
+                                android:background="@drawable/btn_danger"
+                                android:text="@string/btn_slot_delete"
+                                android:textColor="#FFFFFF"
+                                android:textSize="11sp"
+                                android:paddingLeft="8dp"
+                                android:paddingRight="8dp" />
+                        </LinearLayout>
+
+                        <!-- Slot 3 -->
+                        <LinearLayout
+                            android:id="@+id/card_slot_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/card_bg"
+                            android:padding="6dp"
+                            android:layout_marginBottom="4dp">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tv_slot_3_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Slot 3"
+                                    android:textColor="#FFD700"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tv_slot_3_info"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/slot_status_empty"
+                                    android:textColor="#8B9BB4"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/btn_slot_3_save"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:background="@drawable/btn_gold"
+                                android:text="@string/btn_slot_save"
+                                android:textColor="#1A1500"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp" />
+
+                            <Button
+                                android:id="@+id/btn_slot_3_load"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="4dp"
+                                android:background="@drawable/btn_dark"
+                                android:text="@string/btn_slot_load"
+                                android:textColor="#FFFFFF"
+                                android:textSize="11sp"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp" />
+
+                            <Button
+                                android:id="@+id/btn_slot_3_delete"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="4dp"
+                                android:background="@drawable/btn_danger"
+                                android:text="@string/btn_slot_delete"
+                                android:textColor="#FFFFFF"
+                                android:textSize="11sp"
+                                android:paddingLeft="8dp"
+                                android:paddingRight="8dp" />
+                        </LinearLayout>
+
+                        <!-- Slot 4 -->
+                        <LinearLayout
+                            android:id="@+id/card_slot_4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/card_bg"
+                            android:padding="6dp"
+                            android:layout_marginBottom="4dp">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tv_slot_4_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Slot 4"
+                                    android:textColor="#FFD700"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tv_slot_4_info"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/slot_status_empty"
+                                    android:textColor="#8B9BB4"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/btn_slot_4_save"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:background="@drawable/btn_gold"
+                                android:text="@string/btn_slot_save"
+                                android:textColor="#1A1500"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp" />
+
+                            <Button
+                                android:id="@+id/btn_slot_4_load"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="4dp"
+                                android:background="@drawable/btn_dark"
+                                android:text="@string/btn_slot_load"
+                                android:textColor="#FFFFFF"
+                                android:textSize="11sp"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp" />
+
+                            <Button
+                                android:id="@+id/btn_slot_4_delete"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="4dp"
+                                android:background="@drawable/btn_danger"
+                                android:text="@string/btn_slot_delete"
+                                android:textColor="#FFFFFF"
+                                android:textSize="11sp"
+                                android:paddingLeft="8dp"
+                                android:paddingRight="8dp" />
+                        </LinearLayout>
+
+                        <!-- Slot 5 -->
+                        <LinearLayout
+                            android:id="@+id/card_slot_5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/card_bg"
+                            android:padding="6dp">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tv_slot_5_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Slot 5"
+                                    android:textColor="#FFD700"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tv_slot_5_info"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/slot_status_empty"
+                                    android:textColor="#8B9BB4"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/btn_slot_5_save"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:background="@drawable/btn_gold"
+                                android:text="@string/btn_slot_save"
+                                android:textColor="#1A1500"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp" />
+
+                            <Button
+                                android:id="@+id/btn_slot_5_load"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="4dp"
+                                android:background="@drawable/btn_dark"
+                                android:text="@string/btn_slot_load"
+                                android:textColor="#FFFFFF"
+                                android:textSize="11sp"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp" />
+
+                            <Button
+                                android:id="@+id/btn_slot_5_delete"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="4dp"
+                                android:background="@drawable/btn_danger"
+                                android:text="@string/btn_slot_delete"
+                                android:textColor="#FFFFFF"
+                                android:textSize="11sp"
+                                android:paddingLeft="8dp"
+                                android:paddingRight="8dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Story Chapters Card -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/card_bg"
+                        android:padding="8dp"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/section_ref_saves_title"
+                            android:textColor="#4DD0E1"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ref_saves_desc"
+                            android:textColor="#8B9BB4"
+                            android:textSize="11sp"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_select_chapter"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:layout_marginBottom="4dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <Spinner
+                                android:id="@+id/sp_chapters"
+                                android:layout_width="0dp"
+                                android:layout_height="36dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/edit_text_bg" />
+
+                            <Button
+                                android:id="@+id/btn_load_chapter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:layout_marginLeft="6dp"
+                                android:background="@drawable/btn_gold"
+                                android:text="@string/btn_load_chapter"
+                                android:textColor="#1A1500"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:paddingLeft="12dp"
+                                android:paddingRight="12dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+            <!-- Panel 6: Editor Direto (.ini) -->
             <LinearLayout
                 android:id="@+id/panel_raw_ini"
                 android:layout_width="match_parent"

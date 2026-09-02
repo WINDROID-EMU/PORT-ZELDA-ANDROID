@@ -497,6 +497,8 @@ void StateRecorder_RecordPatchByte(StateRecorder *sr, uint32 addr, const uint8 *
 }*/
 
 void ReadFromFile(SDL_RWops *stream, void *data, size_t n) {
+  if (n == 0)
+    return;
   size_t bytesRead = SDL_RWread(stream, data, 1, n);
   if (bytesRead != n) {
     Die("SDL_RWread failed");
@@ -512,12 +514,14 @@ void StateRecorder_Load(StateRecorder *sr, SDL_RWops *f, bool replay_mode) {
 
   sr->total_frames = hdr[1];
   ByteArray_Resize(&sr->log, hdr[2]);
-  ReadFromFile(f, sr->log.data, sr->log.size);
+  if (sr->log.size > 0 && sr->log.data)
+    ReadFromFile(f, sr->log.data, sr->log.size);
   sr->last_inputs = hdr[3];
   sr->frames_since_last = hdr[4];
 
   ByteArray_Resize(&sr->base_snapshot, (hdr[5] & 1) ? hdr[6] : 0);
-  ReadFromFile(f, sr->base_snapshot.data, sr->base_snapshot.size);
+  if (sr->base_snapshot.size > 0 && sr->base_snapshot.data)
+    ReadFromFile(f, sr->base_snapshot.data, sr->base_snapshot.size);
 
   sr->replay_next_cmd_at = 0;
 
@@ -544,7 +548,8 @@ void StateRecorder_Load(StateRecorder *sr, SDL_RWops *f, bool replay_mode) {
 
     ByteArray arr = { 0 };
     ByteArray_Resize(&arr, hdr[6]);
-    ReadFromFile(f, arr.data, arr.size);
+    if (arr.size > 0 && arr.data)
+      ReadFromFile(f, arr.data, arr.size);
     LoadFuncState state = { arr.data, arr.data + arr.size };
     LoadSnesState(&loadFunc, &state);
     ByteArray_Destroy(&arr);
@@ -600,10 +605,13 @@ void StateRecorder_Save(StateRecorder* sr, SDL_RWops* rwops) {
     hdr[5] |= sr->replay_pos_last_complete << 1;
     hdr[7] = sr->replay_frame_counter;
   }
-  SDL_RWwrite(rwops, hdr, sizeof(hdr), 1);
-  SDL_RWwrite(rwops, sr->log.data, hdr[2], 1);
-  SDL_RWwrite(rwops, sr->base_snapshot.data, sr->base_snapshot.size, 1);
-  SDL_RWwrite(rwops, arr.data, arr.size, 1);
+  SDL_RWwrite(rwops, hdr, 1, sizeof(hdr));
+  if (hdr[2] > 0 && sr->log.data)
+    SDL_RWwrite(rwops, sr->log.data, 1, hdr[2]);
+  if (sr->base_snapshot.size > 0 && sr->base_snapshot.data)
+    SDL_RWwrite(rwops, sr->base_snapshot.data, 1, sr->base_snapshot.size);
+  if (arr.size > 0 && arr.data)
+    SDL_RWwrite(rwops, arr.data, 1, arr.size);
 
   ByteArray_Destroy(&arr);
 }
@@ -870,22 +878,25 @@ void SaveLoadSlot(int cmd, int which) {
   }
 }*/
 
-void SaveLoadSlot(int cmd, int which) {
+bool SaveLoadSlot(int cmd, int which) {
   char name[128];
   SDL_RWops* rwops;
 
   if (which & 256) {
     if (cmd == kSaveLoad_Save)
-      return;
-    snprintf(name, sizeof(name), "saves/ref/%s", kReferenceSaves[which - 256]);
+      return false;
+    int ref_idx = which - 256;
+    if (ref_idx < 0 || ref_idx >= (int)(sizeof(kReferenceSaves) / sizeof(kReferenceSaves[0])))
+      return false;
+    snprintf(name, sizeof(name), "saves/ref/%s", kReferenceSaves[ref_idx]);
   } else {
     snprintf(name, sizeof(name), "saves/save%d.sav", which);
   }
 
   rwops = SDL_RWFromFileInExternal(name, cmd != kSaveLoad_Save ? "rb" : "wb");
   if (rwops) {
-    printf("*** %s slot %d\n",
-           cmd == kSaveLoad_Save ? "Saving" : cmd == kSaveLoad_Load ? "Loading" : "Replaying", which);
+    __android_log_print(ANDROID_LOG_INFO, "Zelda3", "*** [SaveLoadSlot] %s slot %d (arquivo: %s)",
+           cmd == kSaveLoad_Save ? "Salvando" : cmd == kSaveLoad_Load ? "Carregando" : "Replaying", which, name);
 
     if (cmd != kSaveLoad_Save)
       StateRecorder_Load(&state_recorder, rwops, cmd == kSaveLoad_Replay);
@@ -893,7 +904,14 @@ void SaveLoadSlot(int cmd, int which) {
       StateRecorder_Save(&state_recorder, rwops);
 
     SDL_RWclose(rwops);
+    __android_log_print(ANDROID_LOG_INFO, "Zelda3", "*** [SaveLoadSlot] %s slot %d concluido com sucesso!",
+           cmd == kSaveLoad_Save ? "Salvamento no" : cmd == kSaveLoad_Load ? "Carregamento do" : "Replay do", which);
+    return true;
+  } else {
+    __android_log_print(ANDROID_LOG_ERROR, "Zelda3", "*** [SaveLoadSlot] FALHA ao abrir arquivo: %s (erro: %s)",
+           name, SDL_GetError());
   }
+  return false;
 }
 
 typedef struct StateRecoderMultiPatch {

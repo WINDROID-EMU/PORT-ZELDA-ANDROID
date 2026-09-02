@@ -397,6 +397,36 @@ JNIEXPORT void JNICALL Java_com_dishii_zelda3_MainActivity_nativeSetInventory(JN
 
   (*env)->ReleaseByteArrayElements(env, data, items, JNI_ABORT);
 }
+
+JNIEXPORT jboolean JNICALL Java_com_dishii_zelda3_MainActivity_nativeSaveState(JNIEnv *env, jclass cls, jint slot) {
+  (void)env;
+  (void)cls;
+  if (!g_audio_mutex) return JNI_FALSE;
+  SDL_LockMutex(g_audio_mutex);
+  bool res = SaveLoadSlot(kSaveLoad_Save, (int)slot);
+  SDL_UnlockMutex(g_audio_mutex);
+  return res ? JNI_TRUE : JNI_FALSE;
+}
+
+JNIEXPORT jboolean JNICALL Java_com_dishii_zelda3_MainActivity_nativeLoadState(JNIEnv *env, jclass cls, jint slot) {
+  (void)env;
+  (void)cls;
+  if (!g_audio_mutex) return JNI_FALSE;
+  SDL_LockMutex(g_audio_mutex);
+  bool res = SaveLoadSlot(kSaveLoad_Load, (int)slot);
+  SDL_UnlockMutex(g_audio_mutex);
+  return res ? JNI_TRUE : JNI_FALSE;
+}
+
+JNIEXPORT jboolean JNICALL Java_com_dishii_zelda3_MainActivity_nativeLoadReferenceState(JNIEnv *env, jclass cls, jint chapterIndex) {
+  (void)env;
+  (void)cls;
+  if (!g_audio_mutex) return JNI_FALSE;
+  SDL_LockMutex(g_audio_mutex);
+  bool res = SaveLoadSlot(kSaveLoad_Load, 256 + (int)chapterIndex);
+  SDL_UnlockMutex(g_audio_mutex);
+  return res ? JNI_TRUE : JNI_FALSE;
+}
 #endif
 
 void ZeldaReloadConfig(void) {

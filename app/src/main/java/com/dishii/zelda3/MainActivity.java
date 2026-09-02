@@ -39,8 +39,12 @@ public class MainActivity extends SDLActivity {
     private class VirtualGamepadView extends View {
         private Paint strokePaint;
         private Paint fillPaint;
+        private Paint knobPaint;
         private Paint textPaint;
         private Paint progressPaint;
+
+        private static final int COLOR_NORMAL = 0xAAFFFFFF;
+        private static final int COLOR_PRESSED_TEXT = 0xFF000000;
 
         private final Handler mHandler = new Handler(Looper.getMainLooper());
         private static final long LONG_PRESS_DURATION_MS = 200;
@@ -74,21 +78,24 @@ public class MainActivity extends SDLActivity {
         public VirtualGamepadView(Context context) {
             super(context);
             
-            int colorWhite = 0xAAFFFFFF; // Semi-transparent white
-            
             strokePaint = new Paint();
-            strokePaint.setColor(colorWhite);
+            strokePaint.setColor(COLOR_NORMAL);
             strokePaint.setStyle(Paint.Style.STROKE);
             strokePaint.setStrokeWidth(6f);
             strokePaint.setAntiAlias(true);
             
             fillPaint = new Paint();
-            fillPaint.setColor(colorWhite);
+            fillPaint.setColor(COLOR_NORMAL);
             fillPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             fillPaint.setAntiAlias(true);
+
+            knobPaint = new Paint();
+            knobPaint.setStyle(Paint.Style.FILL);
+            knobPaint.setColor(COLOR_NORMAL);
+            knobPaint.setAntiAlias(true);
             
             textPaint = new Paint();
-            textPaint.setColor(colorWhite);
+            textPaint.setColor(COLOR_NORMAL);
             textPaint.setTextSize(40f);
             textPaint.setTextAlign(Paint.Align.CENTER);
             textPaint.setFakeBoldText(true);
@@ -194,6 +201,7 @@ public class MainActivity extends SDLActivity {
                 }
             }
             canvas.drawCircle(toggleButton.x, toggleButton.y, toggleButton.rx, strokePaint);
+            textPaint.setColor(toggleButton.pressed ? COLOR_PRESSED_TEXT : COLOR_NORMAL);
             float oldSizeToggle = textPaint.getTextSize();
             textPaint.setTextSize(oldSizeToggle * 0.6f);
             float toggleTextY = toggleButton.y - ((textPaint.descent() + textPaint.ascent()) / 2);
@@ -216,16 +224,13 @@ public class MainActivity extends SDLActivity {
                 analogY = currentDpadY + analogFingerY * scale;
             }
             
-            Paint knobPaint = new Paint(fillPaint);
-            knobPaint.setStyle(Paint.Style.FILL);
-            knobPaint.setColor(0xAAFFFFFF);
             canvas.drawCircle(analogX, analogY, dpadR * 0.5f, knobPaint);
             
             for (ButtonDef b : buttons) {
                 if (b == dpadUp || b == dpadDown || b == dpadLeft || b == dpadRight) continue;
                 
                 Paint currentPaint = b.pressed ? fillPaint : strokePaint;
-                int currentTextColor = b.pressed ? 0xFF000000 : 0xAAFFFFFF;
+                int currentTextColor = b.pressed ? COLOR_PRESSED_TEXT : COLOR_NORMAL;
                 textPaint.setColor(currentTextColor);
                 
                 if (b.type == 0) {
@@ -474,6 +479,9 @@ public class MainActivity extends SDLActivity {
     public static native void nativeReloadConfig();
     public static native byte[] nativeGetInventory();
     public static native void nativeSetInventory(byte[] data);
+    public static native boolean nativeSaveState(int slot);
+    public static native boolean nativeLoadState(int slot);
+    public static native boolean nativeLoadReferenceState(int chapterIndex);
 
     public static void reloadGameConfig() {
         try {
@@ -497,6 +505,42 @@ public class MainActivity extends SDLActivity {
             nativeSetInventory(data);
         } catch (UnsatisfiedLinkError | Exception e) {
             Log.e("Zelda3", "Erro ao chamar nativeSetInventory: " + e.getMessage());
+        }
+    }
+
+    public static boolean saveGameState(int slot) {
+        try {
+            Log.i("Zelda3", "[SaveState] Solicitando salvamento no Slot " + slot);
+            boolean result = nativeSaveState(slot);
+            Log.i("Zelda3", "[SaveState] Resultado do salvamento no Slot " + slot + ": " + (result ? "SUCESSO" : "FALHA"));
+            return result;
+        } catch (UnsatisfiedLinkError | Exception e) {
+            Log.e("Zelda3", "[SaveState] Erro ao chamar nativeSaveState: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean loadGameState(int slot) {
+        try {
+            Log.i("Zelda3", "[LoadState] Solicitando carregamento do Slot " + slot);
+            boolean result = nativeLoadState(slot);
+            Log.i("Zelda3", "[LoadState] Resultado do carregamento do Slot " + slot + ": " + (result ? "SUCESSO" : "FALHA"));
+            return result;
+        } catch (UnsatisfiedLinkError | Exception e) {
+            Log.e("Zelda3", "[LoadState] Erro ao chamar nativeLoadState: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean loadGameReferenceState(int chapterIndex) {
+        try {
+            Log.i("Zelda3", "[LoadChapter] Solicitando carregamento do capitulo " + chapterIndex);
+            boolean result = nativeLoadReferenceState(chapterIndex);
+            Log.i("Zelda3", "[LoadChapter] Resultado do carregamento do capitulo " + chapterIndex + ": " + (result ? "SUCESSO" : "FALHA"));
+            return result;
+        } catch (UnsatisfiedLinkError | Exception e) {
+            Log.e("Zelda3", "[LoadChapter] Erro ao chamar nativeLoadReferenceState: " + e.getMessage());
+            return false;
         }
     }
 

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -25,17 +26,20 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ConfigActivity extends Activity {
 
     private ZeldaConfigHelper configHelper;
 
     // Tabs & Panels
-    private Button tabGeneral, tabGraphics, tabSound, tabFeatures, tabRawIni;
-    private View panelGeneral, panelGraphics, panelSound, panelFeatures, panelRawIni;
+    private Button tabGeneral, tabGraphics, tabSound, tabFeatures, tabSaves, tabRawIni;
+    private View panelGeneral, panelGraphics, panelSound, panelFeatures, panelSaves, panelRawIni;
     private Button currentTabButton;
     private View currentPanel;
 
@@ -68,6 +72,14 @@ public class ConfigActivity extends Activity {
             cbCollectWithSword, cbBreakPots, cbDisableLowHealthBeep, cbSkipIntro,
             cbShowMaxYellow, cbMoreActiveBombs, cbCarryMoreRupees, cbMiscBugFixes,
             cbGameChangingBugFixes, cbCancelBirdTravel, cbSkipDialogueA, cbMaxHearts;
+
+    // Save States & Checkpoints
+    private final TextView[] tvSlotInfo = new TextView[5];
+    private final Button[] btnSlotSave = new Button[5];
+    private final Button[] btnSlotLoad = new Button[5];
+    private final Button[] btnSlotDelete = new Button[5];
+    private Spinner spChapters;
+    private Button btnLoadChapter;
 
     // Raw INI
     private EditText etRawIni;
@@ -150,6 +162,17 @@ public class ConfigActivity extends Activity {
     }
 
     @Override
+    public File getExternalFilesDir(String type) {
+        try {
+            File dir = new File(Environment.getExternalStorageDirectory(), "zelda");
+            if (dir.exists() || dir.mkdirs()) {
+                return dir;
+            }
+        } catch (Exception ignored) {}
+        return super.getExternalFilesDir(type);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         configHelper = new ZeldaConfigHelper(this);
         String currentLang = configHelper.getValue("General", "Language", "");
@@ -187,12 +210,14 @@ public class ConfigActivity extends Activity {
         tabGraphics = findViewById(R.id.tab_graphics);
         tabSound = findViewById(R.id.tab_sound);
         tabFeatures = findViewById(R.id.tab_features);
+        tabSaves = findViewById(R.id.tab_saves);
         tabRawIni = findViewById(R.id.tab_raw_ini);
 
         panelGeneral = findViewById(R.id.panel_general);
         panelGraphics = findViewById(R.id.panel_graphics);
         panelSound = findViewById(R.id.panel_sound);
         panelFeatures = findViewById(R.id.panel_features);
+        panelSaves = findViewById(R.id.panel_saves);
         panelRawIni = findViewById(R.id.panel_raw_ini);
 
         btnSave = findViewById(R.id.btn_save);
@@ -255,6 +280,35 @@ public class ConfigActivity extends Activity {
         cbMaxHearts = findViewById(R.id.cb_max_hearts);
         btnOpenItemEditor = findViewById(R.id.btn_open_item_editor);
 
+        // Save States Slots
+        tvSlotInfo[0] = findViewById(R.id.tv_slot_1_info);
+        btnSlotSave[0] = findViewById(R.id.btn_slot_1_save);
+        btnSlotLoad[0] = findViewById(R.id.btn_slot_1_load);
+        btnSlotDelete[0] = findViewById(R.id.btn_slot_1_delete);
+
+        tvSlotInfo[1] = findViewById(R.id.tv_slot_2_info);
+        btnSlotSave[1] = findViewById(R.id.btn_slot_2_save);
+        btnSlotLoad[1] = findViewById(R.id.btn_slot_2_load);
+        btnSlotDelete[1] = findViewById(R.id.btn_slot_2_delete);
+
+        tvSlotInfo[2] = findViewById(R.id.tv_slot_3_info);
+        btnSlotSave[2] = findViewById(R.id.btn_slot_3_save);
+        btnSlotLoad[2] = findViewById(R.id.btn_slot_3_load);
+        btnSlotDelete[2] = findViewById(R.id.btn_slot_3_delete);
+
+        tvSlotInfo[3] = findViewById(R.id.tv_slot_4_info);
+        btnSlotSave[3] = findViewById(R.id.btn_slot_4_save);
+        btnSlotLoad[3] = findViewById(R.id.btn_slot_4_load);
+        btnSlotDelete[3] = findViewById(R.id.btn_slot_4_delete);
+
+        tvSlotInfo[4] = findViewById(R.id.tv_slot_5_info);
+        btnSlotSave[4] = findViewById(R.id.btn_slot_5_save);
+        btnSlotLoad[4] = findViewById(R.id.btn_slot_5_load);
+        btnSlotDelete[4] = findViewById(R.id.btn_slot_5_delete);
+
+        spChapters = findViewById(R.id.sp_chapters);
+        btnLoadChapter = findViewById(R.id.btn_load_chapter);
+
         // Raw
         etRawIni = findViewById(R.id.et_raw_ini);
     }
@@ -279,6 +333,9 @@ public class ConfigActivity extends Activity {
             presetNames.add(p.name);
         }
         setupSpinnerAdapter(spShaderPreset, presetNames);
+
+        List<String> chapterTitles = getChapterTitles();
+        setupSpinnerAdapter(spChapters, chapterTitles);
     }
 
     private void setupSpinnerAdapter(Spinner spinner, List<String> items) {
@@ -430,6 +487,9 @@ public class ConfigActivity extends Activity {
         cbSkipDialogueA.setChecked(configHelper.getBoolValue("Features", "SkipDialogueOnHoldA", true));
         cbMaxHearts.setChecked(configHelper.getBoolValue("Features", "MaxHearts", false));
 
+        // Save States
+        updateAllSlotsUi();
+
         // Raw
         etRawIni.setText(configHelper.getRawText());
     }
@@ -540,11 +600,100 @@ public class ConfigActivity extends Activity {
             }
         });
 
+        tabSaves.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateAllSlotsUi();
+                selectTab(tabSaves, panelSaves);
+            }
+        });
+
         tabRawIni.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 syncUiToConfigHelper();
                 selectTab(tabRawIni, panelRawIni);
+            }
+        });
+
+        for (int i = 0; i < 5; i++) {
+            final int slot = i;
+            btnSlotSave[slot].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    File externalDir = getExternalFilesDir(null);
+                    if (externalDir != null) {
+                        File savesDir = new File(externalDir, "saves");
+                        if (!savesDir.exists()) savesDir.mkdirs();
+                    }
+                    boolean ok = MainActivity.saveGameState(slot);
+                    if (ok) {
+                        updateSlotUi(slot);
+                        Toast.makeText(ConfigActivity.this, getString(R.string.toast_state_saved, slot + 1), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ConfigActivity.this, getString(R.string.toast_state_save_error, slot + 1), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            btnSlotLoad[slot].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean ok = MainActivity.loadGameState(slot);
+                    if (ok) {
+                        Toast.makeText(ConfigActivity.this, getString(R.string.toast_state_loaded, slot + 1), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ConfigActivity.this, getString(R.string.toast_state_load_error, slot + 1), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            btnSlotDelete[slot].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(ConfigActivity.this)
+                            .setTitle(R.string.dialog_delete_save_title)
+                            .setMessage(getString(R.string.dialog_delete_save_message, slot + 1))
+                            .setPositiveButton(R.string.dialog_delete_positive, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    File file = getSaveStateFile(slot);
+                                    if (file != null && file.exists()) {
+                                        file.delete();
+                                    }
+                                    updateSlotUi(slot);
+                                    Toast.makeText(ConfigActivity.this, getString(R.string.toast_state_deleted, slot + 1), Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .setNegativeButton(R.string.dialog_delete_negative, null)
+                            .show();
+                }
+            });
+        }
+
+        btnLoadChapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final int chapterIdx = spChapters.getSelectedItemPosition();
+                if (chapterIdx < 0 || chapterIdx >= 13) return;
+                final String chapterName = spChapters.getSelectedItem().toString();
+
+                new AlertDialog.Builder(ConfigActivity.this)
+                        .setTitle(R.string.dialog_load_chapter_title)
+                        .setMessage(getString(R.string.dialog_load_chapter_message, chapterName))
+                        .setPositiveButton(R.string.dialog_load_chapter_positive, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                boolean ok = MainActivity.loadGameReferenceState(chapterIdx);
+                                if (ok) {
+                                    Toast.makeText(ConfigActivity.this, getString(R.string.toast_chapter_loaded, chapterName), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ConfigActivity.this, R.string.toast_chapter_load_error, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton(R.string.dialog_restore_negative, null)
+                        .show();
             }
         });
 
@@ -1207,5 +1356,89 @@ public class ConfigActivity extends Activity {
 
         currentTabButton.setTextColor(Color.parseColor("#FFD700"));
         currentPanel.setVisibility(View.VISIBLE);
+    }
+
+    private List<String> getChapterTitles() {
+        int[] chapterResIds = {
+                R.string.chapter_1, R.string.chapter_2, R.string.chapter_3,
+                R.string.chapter_4, R.string.chapter_5, R.string.chapter_6,
+                R.string.chapter_7, R.string.chapter_8, R.string.chapter_9,
+                R.string.chapter_10, R.string.chapter_11, R.string.chapter_12,
+                R.string.chapter_13
+        };
+        List<String> titles = new ArrayList<>();
+        for (int resId : chapterResIds) {
+            titles.add(getString(resId));
+        }
+        return titles;
+    }
+
+    private void updateAllSlotsUi() {
+        for (int i = 0; i < 5; i++) {
+            updateSlotUi(i);
+        }
+    }
+
+    private File getSaveStateFile(int slotIndex) {
+        String subpath = "saves/save" + slotIndex + ".sav";
+        // Candidate 1: /sdcard/zelda/saves/saveX.sav (MainActivity custom storage)
+        try {
+            File zeldaDir = new File(Environment.getExternalStorageDirectory(), "zelda");
+            File f = new File(zeldaDir, subpath);
+            if (f.exists()) return f;
+        } catch (Exception ignored) {}
+
+        // Candidate 2: super.getExternalFilesDir(null)/saves/saveX.sav (Android/data/<pkg>/files/saves/)
+        try {
+            File appExtDir = super.getExternalFilesDir(null);
+            if (appExtDir != null) {
+                File f = new File(appExtDir, subpath);
+                if (f.exists()) return f;
+            }
+        } catch (Exception ignored) {}
+
+        // Candidate 3: internal files dir
+        try {
+            File intDir = getFilesDir();
+            if (intDir != null) {
+                File f = new File(intDir, subpath);
+                if (f.exists()) return f;
+            }
+        } catch (Exception ignored) {}
+
+        // Default target file location
+        File baseDir = getExternalFilesDir(null);
+        return (baseDir != null) ? new File(baseDir, subpath) : null;
+    }
+
+    private void updateSlotUi(final int slotIndex) {
+        if (slotIndex < 0 || slotIndex >= 5) return;
+        if (tvSlotInfo[slotIndex] == null || btnSlotLoad[slotIndex] == null || btnSlotDelete[slotIndex] == null) return;
+
+        File file = getSaveStateFile(slotIndex);
+
+        if (file != null && file.exists() && file.length() > 0) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
+            String dateStr = sdf.format(new Date(file.lastModified()));
+            long sizeKb = Math.max(1, file.length() / 1024);
+            String sizeStr = sizeKb + " KB";
+            tvSlotInfo[slotIndex].setText(getString(R.string.slot_status_saved, dateStr, sizeStr));
+            tvSlotInfo[slotIndex].setTextColor(Color.parseColor("#4DD0E1"));
+
+            btnSlotLoad[slotIndex].setEnabled(true);
+            btnSlotLoad[slotIndex].setAlpha(1.0f);
+
+            btnSlotDelete[slotIndex].setEnabled(true);
+            btnSlotDelete[slotIndex].setAlpha(1.0f);
+        } else {
+            tvSlotInfo[slotIndex].setText(R.string.slot_status_empty);
+            tvSlotInfo[slotIndex].setTextColor(Color.parseColor("#8B9BB4"));
+
+            btnSlotLoad[slotIndex].setEnabled(false);
+            btnSlotLoad[slotIndex].setAlpha(0.35f);
+
+            btnSlotDelete[slotIndex].setEnabled(false);
+            btnSlotDelete[slotIndex].setAlpha(0.35f);
+        }
     }
 }

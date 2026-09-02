@@ -70,7 +70,7 @@ enum {
 };
 
 SDL_RWops* SDL_RWFromFileInExternal(const char *filename, const char *mode);
-void SaveLoadSlot(int cmd, int which);
+bool SaveLoadSlot(int cmd, int which);
 void ZeldaWriteSram();
 void ZeldaReadSram();
 void EmuSyncMemoryRegion(void *ptr, size_t n);

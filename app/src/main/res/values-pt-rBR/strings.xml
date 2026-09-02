@@ -188,4 +188,49 @@
     <string name="sprite_toast_error">Erro ao configurar sprite: %1$s</string>
     <string name="sprite_toast_none_found">Nenhum sprite encontrado nos assets.</string>
     <string name="sprite_storage_unavailable">Armazenamento externo indisponível.</string>
+
+    <!-- Save & Load States -->
+    <string name="tab_saves">💾 Save States</string>
+    <string name="section_saves_title">Salvar e Carregar Estados [Save/Load]</string>
+    <string name="section_quick_slots_title">Slots de Salvamento Rápido (Save States)</string>
+    <string name="quick_slots_desc">Salve e restaure o progresso exato do jogo a qualquer momento em qualquer um dos slots.</string>
+    <string name="label_slot_name">Slot %1$d</string>
+    <string name="slot_status_empty">Vazio • Nenhum save gravado</string>
+    <string name="slot_status_saved">Gravado em: %1$s • %2$s</string>
+    <string name="btn_slot_save">💾 Salvar</string>
+    <string name="btn_slot_load">📂 Carregar</string>
+    <string name="btn_slot_delete">🗑️</string>
+    <string name="dialog_delete_save_title">Apagar Save State</string>
+    <string name="dialog_delete_save_message">Tem certeza que deseja apagar o Save State do Slot %1$d?</string>
+    <string name="dialog_delete_positive">Sim, Apagar</string>
+    <string name="dialog_delete_negative">Cancelar</string>
+    <string name="section_ref_saves_title">Capítulos da História (Checkpoints)</string>
+    <string name="ref_saves_desc">Pule diretamente para o início de qualquer capítulo de A Link to the Past com itens e progresso pré-configurados.</string>
+    <string name="label_select_chapter">Selecione o Capítulo da História:</string>
+    <string name="btn_load_chapter">📂 Carregar Capítulo Selecionado</string>
+    <string name="dialog_load_chapter_title">Carregar Capítulo</string>
+    <string name="dialog_load_chapter_message">Deseja carregar \"%1$s\"? Qualquer progresso atual não salvo será substituído.</string>
+    <string name="dialog_load_chapter_positive">Sim, Carregar</string>
+    <string name="toast_state_saved">Estado salvo no Slot %1$d com sucesso!</string>
+    <string name="toast_state_save_error">Erro ao salvar estado no Slot %1$d!</string>
+    <string name="toast_state_loaded">Estado do Slot %1$d carregado com sucesso!</string>
+    <string name="toast_state_load_error">Erro ao carregar estado do Slot %1$d!</string>
+    <string name="toast_state_deleted">Save State do Slot %1$d apagado.</string>
+    <string name="toast_chapter_loaded">\"%1$s\" carregado com sucesso!</string>
+    <string name="toast_chapter_load_error">Erro ao carregar capítulo de referência!</string>
+
+    <!-- Chapter Names -->
+    <string name="chapter_1">Capítulo 1 - Resgate da Princesa Zelda</string>
+    <string name="chapter_2">Capítulo 2 - Após Palácio do Leste</string>
+    <string name="chapter_3">Capítulo 3 - Após Palácio do Deserto</string>
+    <string name="chapter_4">Capítulo 4 - Após Torre de Hera</string>
+    <string name="chapter_5">Capítulo 5 - Após Torre do Castelo de Hyrule</string>
+    <string name="chapter_6">Capítulo 6 - Após Palácio das Trevas</string>
+    <string name="chapter_7">Capítulo 7 - Após Palácio do Pântano</string>
+    <string name="chapter_8">Capítulo 8 - Após Bosque das Caveiras</string>
+    <string name="chapter_9">Capítulo 9 - Após Covil dos Ladrões</string>
+    <string name="chapter_10">Capítulo 10 - Após Palácio do Gelo</string>
+    <string name="chapter_11">Capítulo 11 - Após Pântano da Miséria</string>
+    <string name="chapter_12">Capítulo 12 - Após Rocha da Tartaruga</string>
+    <string name="chapter_13">Capítulo 13 - Após Torre de Ganon</string>
 </resources>
